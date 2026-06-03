@@ -8,6 +8,7 @@ opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 opts.secretOrKey = process.env.JWT_SECRET;
 
 passport.use(
+  'jwt',
   new JwtStrategy(opts, async (payload, done) => {
     try {
       const user = await prisma.user.findUnique({
@@ -23,5 +24,7 @@ passport.use(
     }
   }),
 );
+
+export const authJWT = passport.authenticate('jwt', { session: false });
 
 export default passport;
