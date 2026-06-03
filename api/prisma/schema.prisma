@@ -1,0 +1,40 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model blog {
+  id       String    @id @default(uuid())
+  comments comment[]
+  user     user      @relation(fields: [userId], references: [id])
+  userId   String
+  added    DateTime  @default(now())
+  updated  DateTime  @updatedAt
+}
+
+model comment {
+  id      String   @id @default(uuid())
+  blog    blog     @relation(fields: [blogId], references: [id])
+  blogId  String
+  user    user     @relation(fields: [userId], references: [id])
+  userId  String
+  added   DateTime @default(now())
+  updated DateTime @updatedAt
+}
+
+model user {
+  id       String    @id @default(uuid())
+  email    String    @unique
+  password String
+  comments comment[]
+  blogs    blog[]
+  added    DateTime  @default(now())
+  updated  DateTime  @updatedAt
+}
