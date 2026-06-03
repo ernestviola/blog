@@ -25,15 +25,16 @@ model blog {
 }
 
 model comment {
-  id      String   @id @default(uuid())
-  body    String
-  likes   Int
-  blog    blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
-  blogId  String
-  user    user     @relation(fields: [userId], references: [id])
-  userId  String
-  added   DateTime @default(now())
-  updated DateTime @updatedAt
+  id       String   @id @default(uuid())
+  body     String
+  likes    Int      @default(0)
+  blog     blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  blogId   String
+  user     user?    @relation(fields: [userId], references: [id])
+  userId   String?
+  username String   @default("Anonymous")
+  added    DateTime @default(now())
+  updated  DateTime @updatedAt
 }
 
 model user {

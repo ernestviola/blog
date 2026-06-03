@@ -40,7 +40,7 @@ blogController.getSingle = async (req, res, next) => {
     });
 
     if (!blog) {
-      return res.status(404).json({ message: 'Not Found.' });
+      return res.status(404).json({ message: 'Not found.' });
     }
 
     return res.status(200).json(blog);
@@ -99,6 +99,8 @@ blogController.put = [
         data: { ...data },
       });
 
+      if (!blog) return res.status(404).json({ message: 'Not found.' });
+
       return res.status(200).json({ success: true, blog });
     } catch (error) {
       next(error);
@@ -116,7 +118,7 @@ blogController.delete = async (req, res, next) => {
       },
     });
 
-    if (!blog) return res.status('404').json({ message: 'Not Found' });
+    if (!blog) return res.status('404').json({ message: 'Not found.' });
 
     return res.status(200).json({ success: true });
   } catch (error) {
