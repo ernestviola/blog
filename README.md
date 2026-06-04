@@ -8,10 +8,6 @@ This project is ran on 3 different servers.
 
 ## API
 
-Prisma
-Passport
-JWT
-
 ### Routes
 
 /api/users
