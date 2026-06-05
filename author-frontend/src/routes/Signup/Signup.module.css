@@ -1,0 +1,9 @@
+.signupForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.signupForm > input {
+  border-radius: 9999px;
+}

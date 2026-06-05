@@ -4,7 +4,8 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "paths": {
-      "@routes/*": ["./src/routes/*"]
+      "@routes/*": ["./src/routes/*/index.jsx", "./src/routes/*"]
     }
-  }
+  },
+  "include": ["src"]
 }
