@@ -2,7 +2,9 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "module": "ESNext",
-    "moduleResolution": "bundler"
-  },
-  "include": ["src"]
+    "moduleResolution": "bundler",
+    "paths": {
+      "@routes/*": ["./src/routes/*"]
+    }
+  }
 }

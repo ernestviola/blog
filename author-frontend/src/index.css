@@ -78,3 +78,10 @@ button,
 a {
   cursor: pointer;
 }
+
+:root {
+  --background-gradient: linear-gradient(#110b11, #1a001a);
+  --accent: #f5d491;
+  --gray: #d9d9d9;
+  --red: #ff0000;
+}
