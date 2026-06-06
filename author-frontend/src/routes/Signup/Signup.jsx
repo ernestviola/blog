@@ -8,8 +8,8 @@ const Signup = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [fieldErrors, setFieldErrors] = useState([]);
-
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [errorObjects, setErrorObjects] = useState([]);
   const [loading, setLoading] = useState(false);
 
   /**
@@ -23,7 +23,8 @@ const Signup = () => {
 
     try {
       setLoading(true);
-      setFieldErrors([]);
+      setFieldErrors({});
+      setErrorObjects([]);
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/api/signup`,
         {
@@ -52,8 +53,8 @@ const Signup = () => {
             error,
           };
         });
-
-        setFieldErrors(errorObj);
+        setFieldErrors(data.fieldErrors);
+        setErrorObjects(errorObj);
       } else {
         // 500 error
       }
@@ -65,22 +66,22 @@ const Signup = () => {
     }
   };
 
-  const removeFieldError = (id) => {
-    const errors = [...fieldErrors];
+  const removeErrorObject = (id) => {
+    const errors = [...errorObjects];
     const filtered = errors.filter((obj) => obj.id !== id);
-    setFieldErrors(filtered);
+    setErrorObjects(filtered);
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.toasts}>
-        {fieldErrors &&
-          fieldErrors.map((errorObj) => {
+        {errorObjects &&
+          errorObjects.map((errorObj) => {
             return (
               <Toast
                 key={errorObj.id}
                 color={'#7f1d1d'}
-                removeToast={() => removeFieldError(errorObj.id)}
+                removeToast={() => removeErrorObject(errorObj.id)}
               >
                 {errorObj.error}
               </Toast>
@@ -98,6 +99,7 @@ const Signup = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+          className={fieldErrors?.email ? styles.error : ''}
         />
         <input
           type='text'
@@ -107,6 +109,7 @@ const Signup = () => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
+          className={fieldErrors?.username ? styles.error : ''}
         />
         <input
           type='password'
@@ -116,6 +119,7 @@ const Signup = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          className={fieldErrors?.password ? styles.error : ''}
         />
         <input
           type='password'
@@ -125,12 +129,16 @@ const Signup = () => {
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
+          className={fieldErrors?.confirmPassword ? styles.error : ''}
         />
         <button type='submit' disabled={loading}>
           Sign Up
         </button>
         <span>
-          Already have an account? <Link to={'/login'}>Log In.</Link>
+          Already have an account?{' '}
+          <Link to={'/login'} viewTransition>
+            Log In.
+          </Link>
         </span>
       </form>
     </div>

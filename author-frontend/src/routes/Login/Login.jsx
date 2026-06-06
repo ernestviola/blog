@@ -6,8 +6,8 @@ import Toast from '@components/Toast';
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [fieldErrors, setFieldErrors] = useState([]);
-
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [errorObjects, setErrorObjects] = useState([]);
   const [loading, setLoading] = useState(false);
 
   /**
@@ -21,7 +21,8 @@ const Login = () => {
 
     try {
       setLoading(true);
-      setFieldErrors([]);
+      setFieldErrors({});
+      setErrorObjects([]);
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/api/login`,
         {
@@ -38,8 +39,8 @@ const Login = () => {
 
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem('Authorization', data.token);
-      } else if (response.status === 400 || response.status === 409) {
+        localStorage.setItem('token', data.token);
+      } else if (response.status === 401) {
         const data = await response.json();
         const errorObj = Object.values(data.fieldErrors).map((error) => {
           const id = crypto.randomUUID();
@@ -48,8 +49,8 @@ const Login = () => {
             error,
           };
         });
-
-        setFieldErrors(errorObj);
+        setFieldErrors(data.fieldErrors);
+        setErrorObjects(errorObj);
       } else {
         // 500 error
       }
@@ -61,22 +62,23 @@ const Login = () => {
     }
   };
 
-  const removeFieldError = (id) => {
-    const errors = [...fieldErrors];
+  const removeErrorObject = (id) => {
+    console.log(id);
+    const errors = [...errorObjects];
     const filtered = errors.filter((obj) => obj.id !== id);
-    setFieldErrors(filtered);
+    setErrorObjects(filtered);
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.toasts}>
-        {fieldErrors &&
-          fieldErrors.map((errorObj) => {
+        {errorObjects &&
+          errorObjects.map((errorObj) => {
             return (
               <Toast
                 key={errorObj.id}
                 color={'#7f1d1d'}
-                removeToast={() => removeFieldError(errorObj.id)}
+                removeToast={() => removeErrorObject(errorObj.id)}
               >
                 {errorObj.error}
               </Toast>
@@ -94,6 +96,7 @@ const Login = () => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
+          className={fieldErrors?.username ? styles.error : ''}
         />
         <input
           type='password'
@@ -103,12 +106,16 @@ const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          className={fieldErrors?.password ? styles.error : ''}
         />
         <button type='submit' disabled={loading}>
           Log In
         </button>
         <span>
-          Need an account? <Link to={'/signup'}>Sign Up.</Link>
+          Need an account?{' '}
+          <Link to={'/signup'} viewTransition>
+            Sign Up.
+          </Link>
         </span>
       </form>
     </div>
