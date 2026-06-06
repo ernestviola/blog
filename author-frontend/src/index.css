@@ -1,3 +1,5 @@
+@import '@/variables.css';
+
 /* 1. Use a more-intuitive box-sizing model */
 *,
 *::before,
@@ -78,14 +80,6 @@ h6 {
   Global styles
 */
 
-:root {
-  --background-gradient: linear-gradient(#110b11, #1a001a);
-  --accent: #f5d491;
-  --gray: #d9d9d9;
-  --red: #ff0000;
-  --default-text: white;
-}
-
 html {
   font-family:
     system-ui,
@@ -106,7 +100,6 @@ html {
 
 body {
   font-size: 1.6rem;
-  min-height: 100vh;
   background: var(--background-gradient);
 }
 
@@ -137,10 +130,4 @@ a {
 
 a:hover {
   text-decoration: none;
-}
-
-input {
-  padding: 10px 15px;
-  color: var(--gray);
-  border: none;
 }

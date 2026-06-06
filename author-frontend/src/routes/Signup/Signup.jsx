@@ -1,52 +1,138 @@
 import { useState } from 'react';
-import styles from './Signup.module.css';
+import styles from '../auth.module.css';
 import { Link } from 'react-router-dom';
+import Toast from '@components/Toast';
 
 const Signup = () => {
-  const [email, setEmail] = useState();
-  const [username, setUsername] = useState();
-  const [password, setPassword] = useState();
-  const [confirmPassword, setConfirmPassword] = useState();
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [fieldErrors, setFieldErrors] = useState([]);
 
-  console.log(email);
+  const [loading, setLoading] = useState(false);
+
+  /**
+   * statuses
+   * 201: successful signup
+   * 400: field errors
+   * 409: username or email in use
+   */
+  const formSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+      setFieldErrors([]);
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/signup`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email,
+            username,
+            password,
+            confirmPassword,
+          }),
+        },
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem('Authorization', data.token);
+      } else if (response.status === 400 || response.status === 409) {
+        const data = await response.json();
+        const errorObj = Object.values(data.fieldErrors).map((error) => {
+          const id = crypto.randomUUID();
+          return {
+            id,
+            error,
+          };
+        });
+
+        setFieldErrors(errorObj);
+      } else {
+        // 500 error
+      }
+    } catch (error) {
+      console.error(error);
+      // set server error fetch failed. couldn't connect to api etc.
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const removeFieldError = (id) => {
+    const errors = [...fieldErrors];
+    const filtered = errors.filter((obj) => obj.id !== id);
+    setFieldErrors(filtered);
+  };
+
   return (
-    <div className={styles.signupForm}>
-      <h1>Sign Up</h1>
-      <input
-        type='email'
-        placeholder='email'
-        name='email'
-        aria-label='Email'
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type='text'
-        placeholder='username'
-        name='username'
-        aria-label='Username'
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <input
-        type='password'
-        placeholder='password'
-        name='password'
-        aria-label='Password'
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <input
-        type='password'
-        placeholder='confirm password'
-        name='confirm-password'
-        aria-label='Confirm Password'
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-      />
-      <span>
-        Already have an account? <Link to={'/login'}>Log In.</Link>
-      </span>
+    <div className={styles.container}>
+      <div className={styles.toasts}>
+        {fieldErrors &&
+          fieldErrors.map((errorObj) => {
+            return (
+              <Toast
+                key={errorObj.id}
+                color={'#7f1d1d'}
+                removeToast={() => removeFieldError(errorObj.id)}
+              >
+                {errorObj.error}
+              </Toast>
+            );
+          })}
+      </div>
+
+      <form className={styles.signupForm} onSubmit={(e) => formSubmit(e)}>
+        <h1>Sign Up</h1>
+        <input
+          type='email'
+          placeholder='email'
+          name='email'
+          aria-label='Email'
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type='text'
+          placeholder='username'
+          name='username'
+          aria-label='Username'
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+        <input
+          type='password'
+          placeholder='password'
+          name='password'
+          aria-label='Password'
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <input
+          type='password'
+          placeholder='confirm password'
+          name='confirmPassword'
+          aria-label='Confirm Password'
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+        />
+        <button type='submit' disabled={loading}>
+          Sign Up
+        </button>
+        <span>
+          Already have an account? <Link to={'/login'}>Log In.</Link>
+        </span>
+      </form>
     </div>
   );
 };
