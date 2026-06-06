@@ -6,6 +6,11 @@ import jwt from 'jsonwebtoken';
 
 const newUserValidation = [
   body('email').trim().isEmail().withMessage('Must be a valid email.'),
+  body('username')
+    .trim()
+    .notEmpty()
+    .isLength({ min: 1, max: 100 })
+    .withMessage('Must choose a username between 1 and 100 characters long.'),
   body('password')
     .notEmpty()
     .withMessage('Password is required.')
@@ -19,7 +24,7 @@ const newUserValidation = [
     .withMessage('Password must contain a number.')
     .matches(/[^A-Za-z0-9]/)
     .withMessage('Password must contain a special character.'),
-  body('confirm_password').custom((value, { req }) => {
+  body('confirmPassword').custom((value, { req }) => {
     if (value !== req.body.password) {
       throw new Error('Passwords do not match.');
     }
@@ -27,10 +32,19 @@ const newUserValidation = [
   }),
 ];
 
-const loginValidation = [body('email').notEmpty(), body('password').notEmpty()];
+const loginValidation = [
+  body('username').notEmpty(),
+  body('password').notEmpty(),
+];
 
 const authController = {};
 
+/**
+ * statuses
+ * 201: successful signup
+ * 400: field errors
+ * 409: username or email in use
+ */
 authController.signup = [
   newUserValidation,
   async (req, res, next) => {
@@ -44,15 +58,17 @@ authController.signup = [
       });
       return res.status(400).json({ fieldErrors });
     }
-
+    const { email, username, password } = matchedData(req);
     // store
     try {
-      const { email, password } = matchedData(req);
       const hash = await bcrypt.hash(password, 10);
       const user = await prisma.user.create({
         data: {
           email,
           password: hash,
+          username: {
+            create: { username },
+          },
         },
       });
 
@@ -63,8 +79,24 @@ authController.signup = [
 
       return res.status(201).json({ token });
     } catch (error) {
-      if (error.code === 'P2002')
-        return res.status(409).json({ message: 'Email is already in use.' });
+      if (error.code === 'P2002') {
+        const emailInUse = await prisma.user.findFirst({ where: { email } });
+        const usernameInUse = await prisma.username.findFirst({
+          where: { username },
+        });
+
+        const fieldErrors = {};
+
+        if (emailInUse) {
+          fieldErrors['email'] = 'Email is already in use.';
+        }
+
+        if (usernameInUse) {
+          fieldErrors['username'] = 'Username is already in use.';
+        }
+        return res.status(409).json({ fieldErrors });
+      }
+
       next(error);
     }
   },
@@ -83,27 +115,56 @@ authController.login = [
       return res.status(400).json({ fieldErrors });
     }
 
-    const { email, password } = matchedData(req);
+    const { username, password } = matchedData(req);
+
+    /**
+     * user logs in with a username or password
+     * check to see if username is actually an email
+     *
+     *  if email then try the email route of checking if the email exists
+     *
+     *  if username check if username exists and is attached to a user
+     */
 
     try {
-      const user = await prisma.user.findFirst({
-        where: {
-          email,
-        },
-      });
+      let user;
+      if (username.includes('@')) {
+        // is an email, try email.
+        user = await prisma.user.findFirst({
+          where: {
+            email: username,
+          },
+        });
+      } else {
+        // try username
+        user = await prisma.user.findFirst({
+          include: {
+            username: true,
+          },
+          where: {
+            username: { username },
+          },
+        });
+      }
 
       if (!user) {
-        return res
-          .status(401)
-          .json({ message: 'Incorrect email or password.' });
+        return res.status(401).json({
+          fieldErrors: {
+            username: 'Incorrect username.',
+            password: 'Incorrect password.',
+          },
+        });
       }
 
       // check if password is correct
       const matchedUserPassword = await bcrypt.compare(password, user.password);
       if (!matchedUserPassword) {
-        return res
-          .status(401)
-          .json({ message: 'Incorrect email or password.' });
+        return res.status(401).json({
+          fieldErrors: {
+            username: 'Incorrect username.',
+            password: 'Incorrect password.',
+          },
+        });
       }
 
       // return JWT

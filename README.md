@@ -6,6 +6,10 @@ This project is ran on 3 different servers.
 2. reader frontend
 3. author frontend
 
+## TODO
+
+Include auth errors in LOGIN
+
 ## API
 
 ### Routes

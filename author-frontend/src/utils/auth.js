@@ -12,3 +12,21 @@ export const isLoggedIn = () => {
     return false;
   }
 };
+
+export const authFetch = async (url, options = {}) => {
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      ...options.headers,
+      ...getAuthHeader(),
+    },
+  });
+
+  if (response.status === 401) {
+    localStorage.removeItem('token');
+    window.location.href = '/login';
+    return;
+  }
+
+  return response;
+};

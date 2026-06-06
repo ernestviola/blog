@@ -49,7 +49,7 @@ model user {
 
 model username {
   id       String    @id @default(uuid())
-  username String
+  username String    @unique
   comments comment[]
   user     user?
 }
