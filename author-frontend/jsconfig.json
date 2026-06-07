@@ -4,8 +4,9 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "paths": {
-      "@routes/*": ["./src/routes/*/index.jsx", "./src/routes/*"],
+      "@utils/*": ["./src/utils/*/index.jsx", "./src/utils/*"],
       "@components/*": ["./src/components/*/index.jsx", "./src/components/*"],
+      "@routes/*": ["./src/routes/*/index.jsx", "./src/routes/*"],
       "@/*": ["./src/*"]
     }
   },

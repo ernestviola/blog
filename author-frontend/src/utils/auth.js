@@ -2,6 +2,10 @@ export const getAuthHeader = () => ({
   Authorization: `Bearer ${localStorage.getItem('token')}`,
 });
 
+export const logout = () => {
+  localStorage.removeItem('token');
+};
+
 export const isLoggedIn = () => {
   const token = localStorage.getItem('token');
   if (!token) return false;
@@ -13,7 +17,7 @@ export const isLoggedIn = () => {
   }
 };
 
-export const authFetch = async (url, options = {}) => {
+export const authFetch = async (url, options = {}, navigate) => {
   const response = await fetch(url, {
     ...options,
     headers: {
@@ -24,7 +28,7 @@ export const authFetch = async (url, options = {}) => {
 
   if (response.status === 401) {
     localStorage.removeItem('token');
-    window.location.href = '/login';
+    navigate('/login', { viewTransition: true });
     return;
   }
 

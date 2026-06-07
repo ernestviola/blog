@@ -42,13 +42,13 @@ const Login = () => {
         localStorage.setItem('token', data.token);
       } else if (response.status === 401) {
         const data = await response.json();
-        const errorObj = Object.values(data.fieldErrors).map((error) => {
-          const id = crypto.randomUUID();
-          return {
-            id,
-            error,
-          };
-        });
+        const errorObj = [
+          {
+            id: crypto.randomUUID(),
+            error: 'Incorrect username or password.',
+          },
+        ];
+
         setFieldErrors(data.fieldErrors);
         setErrorObjects(errorObj);
       } else {
