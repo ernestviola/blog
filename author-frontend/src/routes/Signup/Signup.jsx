@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from '../auth.module.css';
 import { Link } from 'react-router-dom';
 import Toast from '@components/Toast';
@@ -11,6 +11,10 @@ const Signup = () => {
   const [fieldErrors, setFieldErrors] = useState({});
   const [errorObjects, setErrorObjects] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    document.title = 'Sign up';
+  }, []);
 
   /**
    * statuses
@@ -99,7 +103,7 @@ const Signup = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className={fieldErrors?.email ? styles.error : ''}
+          className={`${styles.input} ${fieldErrors?.email ? styles.error : ''}`}
         />
         <input
           type='text'
@@ -109,7 +113,7 @@ const Signup = () => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
-          className={fieldErrors?.username ? styles.error : ''}
+          className={`${styles.input} ${fieldErrors?.username ? styles.error : ''}`}
         />
         <input
           type='password'
@@ -119,7 +123,7 @@ const Signup = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className={fieldErrors?.password ? styles.error : ''}
+          className={`${styles.input} ${fieldErrors?.password ? styles.error : ''}`}
         />
         <input
           type='password'
@@ -129,9 +133,9 @@ const Signup = () => {
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
-          className={fieldErrors?.confirmPassword ? styles.error : ''}
+          className={`${styles.input} ${fieldErrors?.confirmPassword ? styles.error : ''}`}
         />
-        <button type='submit' disabled={loading}>
+        <button type='submit' disabled={loading} className={styles.button}>
           Sign Up
         </button>
         <span>

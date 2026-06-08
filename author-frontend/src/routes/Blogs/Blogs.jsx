@@ -8,6 +8,10 @@ const Home = () => {
   const [blogs, setBlogs] = useState([]);
 
   useEffect(() => {
+    document.title = 'Your Blogs';
+  }, []);
+
+  useEffect(() => {
     async function fetchData() {
       try {
         const response = await authFetch(
