@@ -80,6 +80,15 @@ h6 {
   Global styles
 */
 
+html,
+body,
+#root {
+  min-height: 100vh;
+}
+#root {
+  width: 100%;
+}
+
 html {
   font-family:
     system-ui,
@@ -96,13 +105,12 @@ html {
 
   color: var(--default-text);
   font-size: 10px;
-  background: #110b11;
 }
 
 body {
   font-size: 1.6rem;
   background: var(--background-gradient);
-  min-height: 100vh;
+  background-attachment: fixed;
 }
 
 h1 {

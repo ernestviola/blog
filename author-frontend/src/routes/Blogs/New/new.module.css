@@ -1,0 +1,76 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  gap: 16px;
+}
+
+.header {
+  margin: 0 auto;
+  max-width: 800px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.titleInput {
+  color: white;
+  font-size: 3.2rem;
+  font-weight: 700;
+  padding: 10px;
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+
+.titleInput::placeholder {
+  color: #adb5bd;
+}
+
+.body {
+  flex-grow: 1;
+}
+
+.footer {
+  padding: 16px;
+  background-color: #431743;
+}
+
+.footerButtons > div > button {
+  font-size: 2rem;
+  border: none;
+}
+
+.footerButtons {
+  margin: 0 auto;
+  max-width: 800px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.right {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.delete {
+  background-color: var(--delete);
+}
+.delete:hover {
+  background-color: var(--delete-hover);
+}
+.save {
+  background-color: var(--save);
+}
+.save:hover {
+  background-color: var(--save-hover);
+}
+.publish {
+  background-color: var(--publish);
+}
+.publish:hover {
+  background-color: var(--publish-hover);
+}

@@ -1,7 +1,18 @@
 :root {
   --background-gradient: linear-gradient(#110b11, #1a001a);
+
   --accent: #f5d491;
+
   --gray: #d9d9d9;
   --red: #ff0000;
   --default-text: white;
+
+  --delete: #b30000;
+  --delete-hover: #ff0000;
+
+  --save: #45a845;
+  --save-hover: #00ff00;
+
+  --publish: #f5d491;
+  --publish-hover: #e8a41c;
 }
