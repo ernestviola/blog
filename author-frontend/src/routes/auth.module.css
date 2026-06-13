@@ -40,8 +40,10 @@
 
 .button {
   background-color: var(--accent);
+  transition: background-color 0.2s ease-out;
 }
 
-.button:hover {
-  filter: brightness(0.9);
+.button:hover,
+.button:focus {
+  background-color: var(--accent-hover);
 }

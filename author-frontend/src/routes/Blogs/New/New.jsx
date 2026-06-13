@@ -1,14 +1,49 @@
 import Editor from '@components/Editor';
 import { useState, useEffect } from 'react';
 import styles from './new.module.css';
+import { authFetch } from '@utils/auth.js';
+import { useNavigate } from 'react-router-dom';
 
 const New = () => {
+  const navigate = useNavigate();
+
   const [markdown, setMarkdown] = useState('');
   const [title, setTitle] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     document.title = 'New Blog';
   }, []);
+
+  const handleSave = async () => {
+    setLoading(true);
+    try {
+      const response = await authFetch(
+        `${import.meta.env.VITE_API_URL}/api/blogs`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            title: title,
+            body: markdown,
+          }),
+        },
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) navigate('/blogs', { viewTransition: true });
+      } else {
+        throw new Error('Issues saving the post.');
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -35,7 +70,7 @@ const New = () => {
             <button
               className={styles.save}
               title='Save'
-              onClick={() => console.log({ title, markdown })}
+              onClick={() => handleSave()}
             >
               Save
             </button>

@@ -27,11 +27,7 @@ const Editor = ({ onChange }) => {
 
   if (!editor) return null;
 
-  return (
-    <div className={styles.container}>
-      <EditorContent className={styles.editor} editor={editor} />
-    </div>
-  );
+  return <EditorContent className={styles.editor} editor={editor} />;
 };
 
 export default Editor;

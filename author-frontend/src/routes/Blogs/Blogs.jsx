@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authFetch } from '@utils/auth.js';
+import { BiHeart } from 'react-icons/bi';
+import { BsEye } from 'react-icons/bs';
+import { BiEdit } from 'react-icons/bi';
 import styles from './blogs.module.css';
 
 const Home = () => {
@@ -24,7 +27,7 @@ const Home = () => {
 
         if (response.ok) {
           const data = await response.json();
-          console.log(data);
+          console.log(data.blogs);
           setBlogs(data.blogs);
         }
       } catch {
@@ -43,9 +46,35 @@ const Home = () => {
   return (
     <div>
       <h1>Blogs</h1>
-      <div className={styles.blogs}>
-        {blogs && blogs.map((blog) => <>{blog}</>)}
-      </div>
+      <ul className={styles.blogs}>
+        {blogs.map((blog) => (
+          <li key={blog.id}>
+            <div>
+              <div>
+                <BiHeart />
+                <span>{blog.likes}</span>
+              </div>
+              <div>
+                <BsEye />
+                <span>{blog.views}</span>
+              </div>
+            </div>
+            <h2>{blog.title}</h2>
+            <span>{blog.user.username.username}</span>
+            <span>
+              {new Date(blog.updated).toLocaleDateString('en-US', {
+                weekday: 'short',
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric',
+              })}
+            </span>
+            <button>
+              <BiEdit />
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

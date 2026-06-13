@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 import styles from '../auth.module.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Toast from '@components/Toast';
+import { isLoggedIn } from '@utils/auth.js';
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
@@ -13,6 +16,12 @@ const Login = () => {
   useEffect(() => {
     document.title = 'Login';
   }, []);
+
+  useEffect(() => {
+    if (isLoggedIn()) {
+      navigate('/blogs', { viewTransition: true });
+    }
+  });
 
   /**
    * statuses
@@ -43,6 +52,7 @@ const Login = () => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log(data);
         localStorage.setItem('token', data.token);
       } else if (response.status === 401) {
         const data = await response.json();

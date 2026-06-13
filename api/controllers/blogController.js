@@ -15,13 +15,19 @@ const putBlogValidation = [
 
 blogController.getAll = async (req, res, next) => {
   try {
-    const blogs = await prisma.blog.findMany();
+    const blogs = await prisma.blog.findMany({
+      include: {
+        user: {
+          select: { username: { select: { username: true } } },
+        },
+      },
+    });
 
     if (!blogs.length) {
       return res.status(404).json({ message: 'Not found.' });
     }
 
-    return res.status(200).json(blogs);
+    return res.status(200).json({ success: true, blogs });
   } catch (error) {
     next(error);
   }
@@ -34,6 +40,11 @@ blogController.getSingle = async (req, res, next) => {
       where: {
         id: id,
       },
+      include: {
+        user: {
+          select: { username: { select: { username: true } } },
+        },
+      },
       data: {
         views: { increment: 1 },
       },
@@ -43,7 +54,7 @@ blogController.getSingle = async (req, res, next) => {
       return res.status(404).json({ message: 'Not found.' });
     }
 
-    return res.status(200).json(blog);
+    return res.status(200).json({ success: true, blog });
   } catch (error) {
     next(error);
   }

@@ -105,6 +105,7 @@ html {
 
   color: var(--default-text);
   font-size: 10px;
+  background-color: #1a001a;
 }
 
 body {

@@ -15,6 +15,7 @@
 }
 
 .titleInput {
+  width: 100%;
   color: white;
   font-size: 3.2rem;
   font-weight: 700;
@@ -34,12 +35,6 @@
 
 .footer {
   padding: 16px;
-  background-color: #431743;
-}
-
-.footerButtons > div > button {
-  font-size: 2rem;
-  border: none;
 }
 
 .footerButtons {
@@ -49,28 +44,46 @@
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+  gap: 10px;
 }
 
 .right {
   display: flex;
   flex-wrap: wrap;
+  gap: 10px;
+}
+
+.delete {
+  border-color: var(--delete);
+}
+
+.footerButtons > div > button {
+  padding: 8px 16px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1.5rem;
+  transition: background-color 0.2s ease-out;
+  width: 90px;
 }
 
 .delete {
   background-color: var(--delete);
 }
-.delete:hover {
+
+.delete:hover,
+.delete:focus {
   background-color: var(--delete-hover);
 }
-.save {
-  background-color: var(--save);
-}
-.save:hover {
+
+.save:hover,
+.save:focus {
   background-color: var(--save-hover);
 }
 .publish {
   background-color: var(--publish);
 }
-.publish:hover {
+.publish:hover,
+.publish:focus {
   background-color: var(--publish-hover);
 }

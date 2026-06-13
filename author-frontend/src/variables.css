@@ -2,6 +2,7 @@
   --background-gradient: linear-gradient(#110b11, #1a001a);
 
   --accent: #f5d491;
+  --accent-hover: #ee9e00;
 
   --gray: #d9d9d9;
   --red: #ff0000;
@@ -11,8 +12,8 @@
   --delete-hover: #ff0000;
 
   --save: #45a845;
-  --save-hover: #00ff00;
+  --save-hover: #00a700;
 
   --publish: #f5d491;
-  --publish-hover: #e8a41c;
+  --publish-hover: #ee9e00;
 }
