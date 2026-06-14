@@ -61,7 +61,7 @@ const Home = () => {
             </div>
             <div className={styles.content}>
               <h2 className={styles.title}>{blog.title}</h2>
-              <p>{blog.user.username.username}</p>
+              <p>Author: {blog.user.username.username}</p>
               <p>
                 Last Updated:{' '}
                 {new Date(blog.updated).toLocaleDateString('en-US', {
@@ -73,8 +73,8 @@ const Home = () => {
               </p>
             </div>
 
-            <button>
-              <BiEdit />
+            <button className={styles.editButton}>
+              <BiEdit className={styles.edit} />
             </button>
           </li>
         ))}

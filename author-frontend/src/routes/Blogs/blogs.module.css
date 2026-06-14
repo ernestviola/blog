@@ -16,7 +16,7 @@
 .blogStat {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
 }
 
 .content {
@@ -31,9 +31,21 @@
 }
 
 .heart {
-  font-size: 2rem;
+  font-size: 2.4rem;
+  color: var(--red);
 }
 
 .eye {
-  font-size: 2rem;
+  color: var(--accent);
+  font-size: 2.4rem;
+}
+
+.edit {
+  color: var(--gray);
+  font-size: 3.2rem;
+}
+
+.editButton {
+  background-color: transparent;
+  border: none;
 }
