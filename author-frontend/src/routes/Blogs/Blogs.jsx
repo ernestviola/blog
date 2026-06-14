@@ -51,16 +51,16 @@ const Home = () => {
           <li key={blog.id} className={styles.blogItem}>
             <div>
               <div className={styles.blogStat}>
-                <BiHeart />
+                <BiHeart className={styles.heart} />
                 <span>{blog.likes}</span>
               </div>
               <div className={styles.blogStat}>
-                <BsEye />
+                <BsEye className={styles.eye} />
                 <span>{blog.views}</span>
               </div>
             </div>
-            <div>
-              <h2>{blog.title}</h2>
+            <div className={styles.content}>
+              <h2 className={styles.title}>{blog.title}</h2>
               <p>{blog.user.username.username}</p>
               <p>
                 Last Updated:{' '}

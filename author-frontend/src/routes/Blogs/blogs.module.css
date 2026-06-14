@@ -1,16 +1,39 @@
 .blogs {
+  width: 800px;
   margin: 0 auto;
   list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
 .blogItem {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 2rem;
 }
 
 .blogStat {
   display: flex;
   align-items: center;
   gap: 5px;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.heart {
+  font-size: 2rem;
+}
+
+.eye {
+  font-size: 2rem;
 }
