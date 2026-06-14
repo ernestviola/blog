@@ -48,27 +48,31 @@ const Home = () => {
       <h1>Blogs</h1>
       <ul className={styles.blogs}>
         {blogs.map((blog) => (
-          <li key={blog.id}>
+          <li key={blog.id} className={styles.blogItem}>
             <div>
-              <div>
+              <div className={styles.blogStat}>
                 <BiHeart />
                 <span>{blog.likes}</span>
               </div>
-              <div>
+              <div className={styles.blogStat}>
                 <BsEye />
                 <span>{blog.views}</span>
               </div>
             </div>
-            <h2>{blog.title}</h2>
-            <span>{blog.user.username.username}</span>
-            <span>
-              {new Date(blog.updated).toLocaleDateString('en-US', {
-                weekday: 'short',
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric',
-              })}
-            </span>
+            <div>
+              <h2>{blog.title}</h2>
+              <p>{blog.user.username.username}</p>
+              <p>
+                Last Updated:{' '}
+                {new Date(blog.updated).toLocaleDateString('en-US', {
+                  weekday: 'short',
+                  month: 'long',
+                  day: 'numeric',
+                  year: 'numeric',
+                })}
+              </p>
+            </div>
+
             <button>
               <BiEdit />
             </button>

@@ -1,0 +1,16 @@
+.blogs {
+  margin: 0 auto;
+  list-style: none;
+}
+
+.blogItem {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.blogStat {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
