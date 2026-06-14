@@ -9,8 +9,8 @@ This project is ran on 3 different servers.
 ## TODO
 
 Create a dark and light theme which users can switch between in the navbar
-Hook up the editor so users can save and publish posts
 Build a way so users to edit posts
+Query filter for posts
 
 ## API
 

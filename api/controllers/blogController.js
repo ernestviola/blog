@@ -6,6 +6,7 @@ const blogController = {};
 const blogValidation = [
   body('title').trim().notEmpty(),
   body('body').trim().notEmpty(),
+  body('published').isBoolean(),
 ];
 
 const putBlogValidation = [

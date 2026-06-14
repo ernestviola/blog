@@ -72,6 +72,7 @@ const Home = () => {
                 })}
               </p>
             </div>
+            <span>Status: {blog.published ? 'Published' : 'Hidden'}</span>
 
             <button className={styles.editButton}>
               <BiEdit className={styles.edit} />

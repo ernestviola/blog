@@ -45,6 +45,37 @@ const New = () => {
     }
   };
 
+  const handlePublish = async () => {
+    setLoading(true);
+    try {
+      const response = await authFetch(
+        `${import.meta.env.VITE_API_URL}/api/blogs`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            title: title,
+            body: markdown,
+            published: true,
+          }),
+        },
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) navigate('/blogs', { viewTransition: true });
+      } else {
+        throw new Error('Issues saving the post.');
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -74,7 +105,11 @@ const New = () => {
             >
               Save
             </button>
-            <button className={styles.publish} title='Publish'>
+            <button
+              className={styles.publish}
+              title='Publish'
+              onClick={() => handlePublish()}
+            >
               Publish
             </button>
           </div>
