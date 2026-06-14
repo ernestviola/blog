@@ -20,7 +20,7 @@ blogController.getAll = async (req, res, next) => {
   try {
     // check if user is logged in. if true then return their unpublished posts
     let blogs;
-    if (req.user.id) {
+    if (req.user) {
       blogs = await prisma.blog.findMany({
         include: {
           user: {
@@ -58,19 +58,38 @@ blogController.getAll = async (req, res, next) => {
 blogController.getSingle = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const blog = await prisma.blog.update({
-      where: {
-        id: id,
-      },
-      include: {
-        user: {
-          select: { username: { select: { username: true } } },
+    let blog;
+    if (req.user) {
+      blog = await prisma.blog.update({
+        where: {
+          id: id,
+          OR: [{ published: true }, { userId: req.user.id }],
         },
-      },
-      data: {
-        views: { increment: 1 },
-      },
-    });
+        include: {
+          user: {
+            select: { username: { select: { username: true } } },
+          },
+        },
+        data: {
+          views: { increment: 1 },
+        },
+      });
+    } else {
+      blog = await prisma.blog.update({
+        where: {
+          id: id,
+          published: true,
+        },
+        include: {
+          user: {
+            select: { username: { select: { username: true } } },
+          },
+        },
+        data: {
+          views: { increment: 1 },
+        },
+      });
+    }
 
     if (!blog) {
       return res.status(404).json({ message: 'Not found.' });
