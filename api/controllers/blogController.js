@@ -1,4 +1,4 @@
-import { body, validationResult, matchedData } from 'express-validator';
+import { body, validationResult, matchedData, param } from 'express-validator';
 
 import { prisma } from '../libs/prisma.js';
 
@@ -9,6 +9,8 @@ const blogValidation = [
   body('published').isBoolean(),
 ];
 
+const searchParams = [param('title'), param['userId'], param('blogId')];
+
 const putBlogValidation = [
   body('title').trim().notEmpty().optional(),
   body('body').trim().notEmpty().optional(),
@@ -16,13 +18,32 @@ const putBlogValidation = [
 
 blogController.getAll = async (req, res, next) => {
   try {
-    const blogs = await prisma.blog.findMany({
-      include: {
-        user: {
-          select: { username: { select: { username: true } } },
+    // check if user is logged in. if true then return their unpublished posts
+    let blogs;
+    if (req.user.id) {
+      blogs = await prisma.blog.findMany({
+        include: {
+          user: {
+            select: { username: { select: { username: true } } },
+          },
         },
-      },
-    });
+        where: {
+          OR: [{ published: true }, { userId: req.user.id }],
+        },
+      });
+    } else {
+      // if not only return published posts
+      blogs = await prisma.blog.findMany({
+        include: {
+          user: {
+            select: { username: { select: { username: true } } },
+          },
+        },
+        where: {
+          published: true,
+        },
+      });
+    }
 
     if (!blogs.length) {
       return res.status(404).json({ message: 'Not found.' });
