@@ -74,7 +74,7 @@ const Home = () => {
             </div>
             <span>Status: {blog.published ? 'Published' : 'Hidden'}</span>
 
-            <Link className={styles.editButton} to={`/blogs/edit/${blog.id}`}>
+            <Link className={styles.editButton} to={`/blogs/${blog.id}/edit`}>
               <BiEdit className={styles.edit} />
             </Link>
           </li>

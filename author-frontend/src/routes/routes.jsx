@@ -13,7 +13,7 @@ const routes = [
     children: [
       { index: true, Component: Blogs },
       { path: 'new', Component: New },
-      { path: 'edit/:blogId', Component: Edit },
+      { path: ':blogId/edit', Component: Edit },
     ],
   },
   { path: '/signup', element: <Signup /> },
