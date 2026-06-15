@@ -1,0 +1,89 @@
+.container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.header {
+  margin: 0 auto;
+  max-width: 800px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.titleInput {
+  width: 100%;
+  color: white;
+  font-size: 3.2rem;
+  font-weight: 700;
+  padding: 10px;
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+
+.titleInput::placeholder {
+  color: #adb5bd;
+}
+
+.body {
+  flex-grow: 1;
+}
+
+.footer {
+  padding: 16px;
+}
+
+.footerButtons {
+  margin: 0 auto;
+  max-width: 800px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.right {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.delete {
+  border-color: var(--delete);
+}
+
+.footerButtons > div > button {
+  padding: 8px 16px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1.5rem;
+  transition: background-color 0.2s ease-out;
+  width: 90px;
+}
+
+.delete {
+  background-color: var(--delete);
+}
+
+.delete:hover,
+.delete:focus {
+  background-color: var(--delete-hover);
+}
+
+.save:hover,
+.save:focus {
+  background-color: var(--save-hover);
+}
+.publish {
+  background-color: var(--publish);
+}
+.publish:hover,
+.publish:focus {
+  background-color: var(--publish-hover);
+}

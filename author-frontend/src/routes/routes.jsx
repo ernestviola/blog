@@ -1,5 +1,6 @@
 import Blogs from '@routes/Blogs';
 import New from '@routes/Blogs/New';
+import Edit from '@routes/Blogs/Edit';
 import Login from '@routes/Login';
 import Signup from '@routes/Signup';
 import Splat from '@routes/Splat';
@@ -12,6 +13,7 @@ const routes = [
     children: [
       { index: true, Component: Blogs },
       { path: 'new', Component: New },
+      { path: 'edit/:blogId', Component: Edit },
     ],
   },
   { path: '/signup', element: <Signup /> },

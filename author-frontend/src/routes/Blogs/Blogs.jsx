@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { authFetch } from '@utils/auth.js';
+import styles from './blogs.module.css';
+
 import { BiHeart } from 'react-icons/bi';
 import { BsEye } from 'react-icons/bs';
 import { BiEdit } from 'react-icons/bi';
-import styles from './blogs.module.css';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -45,7 +46,6 @@ const Home = () => {
 
   return (
     <div>
-      <h1>Blogs</h1>
       <ul className={styles.blogs}>
         {blogs.map((blog) => (
           <li key={blog.id} className={styles.blogItem}>
@@ -74,9 +74,9 @@ const Home = () => {
             </div>
             <span>Status: {blog.published ? 'Published' : 'Hidden'}</span>
 
-            <button className={styles.editButton}>
+            <Link className={styles.editButton} to={`/blogs/edit/${blog.id}`}>
               <BiEdit className={styles.edit} />
-            </button>
+            </Link>
           </li>
         ))}
       </ul>

@@ -31,7 +31,9 @@ const Navbar = () => {
         {loggedIn ? (
           <Link onClick={() => handleLogout()}>Logout</Link>
         ) : (
-          <Link to='/login'>Log In</Link>
+          <Link to='/login' viewTransition>
+            Log In
+          </Link>
         )}
       </div>
     </div>
