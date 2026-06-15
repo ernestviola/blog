@@ -2,26 +2,52 @@ import Editor from '@components/Editor';
 import { useState, useEffect } from 'react';
 import styles from './edit.module.css';
 import { authFetch } from '@utils/auth.js';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import Loading from '@components/Loading';
 
 const Edit = () => {
   const navigate = useNavigate();
-
-  const [markdown, setMarkdown] = useState('');
-  const [title, setTitle] = useState('');
+  const [markdown, setMarkdown] = useState(null);
+  const [title, setTitle] = useState(null);
   const [loading, setLoading] = useState(false);
+  const { blogId } = useParams();
 
   useEffect(() => {
     document.title = 'New Blog';
+  }, []);
+
+  useEffect(() => {
+    async function fetchBlogData() {
+      try {
+        const response = await authFetch(
+          `${import.meta.env.VITE_API_URL}/api/blogs/${blogId}`,
+          {
+            method: 'GET',
+          },
+        );
+
+        if (!response.ok) {
+          throw new Error('Issues retrieving the blog');
+        }
+
+        const data = await response.json();
+        setTitle(data.blog.title ?? '');
+        setMarkdown(data.blog.body ?? '');
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchBlogData();
   }, []);
 
   const handleSave = async () => {
     setLoading(true);
     try {
       const response = await authFetch(
-        `${import.meta.env.VITE_API_URL}/api/blogs`,
+        `${import.meta.env.VITE_API_URL}/api/blogs/${blogId}`,
         {
-          method: 'POST',
+          method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -76,6 +102,10 @@ const Edit = () => {
     }
   };
 
+  if (markdown === null && title === null) {
+    return <Loading />;
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -88,12 +118,12 @@ const Edit = () => {
       </div>
 
       <div className={styles.body}>
-        <Editor onChange={setMarkdown} />
+        <Editor onChange={setMarkdown} initialMarkdown={markdown} />
       </div>
       <footer className={styles.footer}>
         <div className={styles.footerButtons}>
           <div className={styles.left}>
-            <button className={styles.delete} title='Delete'>
+            <button className={styles.delete} title='Delete' disabled={loading}>
               Delete
             </button>
           </div>
@@ -102,6 +132,7 @@ const Edit = () => {
               className={styles.save}
               title='Save'
               onClick={() => handleSave()}
+              disabled={loading}
             >
               Save
             </button>
@@ -109,6 +140,7 @@ const Edit = () => {
               className={styles.publish}
               title='Publish'
               onClick={() => handlePublish()}
+              disabled={loading}
             >
               Publish
             </button>

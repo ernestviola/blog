@@ -4,9 +4,9 @@ import { prisma } from '../libs/prisma.js';
 
 const blogController = {};
 const blogValidation = [
-  body('title').trim().notEmpty(),
-  body('body').trim().notEmpty(),
-  body('published').isBoolean(),
+  body('title').trim().notEmpty().optional(),
+  body('body').trim().notEmpty().optional(),
+  body('published').isBoolean().optional(),
 ];
 
 const searchParams = [param('title'), param['userId'], param('blogId')];
@@ -14,6 +14,7 @@ const searchParams = [param('title'), param['userId'], param('blogId')];
 const putBlogValidation = [
   body('title').trim().notEmpty().optional(),
   body('body').trim().notEmpty().optional(),
+  body('published').isBoolean().optional(),
 ];
 
 blogController.getAll = async (req, res, next) => {

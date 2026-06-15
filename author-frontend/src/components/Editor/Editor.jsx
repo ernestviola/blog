@@ -5,8 +5,10 @@ import { Placeholder } from '@tiptap/extensions';
 import styles from './editor.module.css';
 import './tiptapGlobals.css';
 
-const Editor = ({ onChange }) => {
+const Editor = ({ onChange, initialMarkdown = '' }) => {
   const editor = useEditor({
+    content: initialMarkdown,
+    contentType: 'markdown',
     extensions: [
       StarterKit,
       Markdown.configure({

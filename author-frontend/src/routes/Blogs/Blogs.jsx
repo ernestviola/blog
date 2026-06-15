@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authFetch } from '@utils/auth.js';
 import styles from './blogs.module.css';
+import NewBlogButton from '@components/NewBlogButton';
 
 import { BiHeart } from 'react-icons/bi';
 import { BsEye } from 'react-icons/bs';
@@ -46,6 +47,7 @@ const Home = () => {
 
   return (
     <div>
+      <NewBlogButton />
       <ul className={styles.blogs}>
         {blogs.map((blog) => (
           <li key={blog.id} className={styles.blogItem}>
