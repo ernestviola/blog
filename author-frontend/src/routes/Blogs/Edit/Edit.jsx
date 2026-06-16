@@ -50,35 +50,60 @@ const Edit = () => {
     fetchBlogData();
   }, [blogId, navigate]);
 
-  const handleSave = async () => {
-    setLoading(true);
-    try {
-      const response = await authFetch(
-        `${import.meta.env.VITE_API_URL}/api/blogs/${blogId}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
+  const addToast = useCallback((status) => {
+    const id = crypto.randomUUID();
+    setToasts((prev) => [...prev, { id, status }]);
+  }, []);
+
+  const removeToast = useCallback((id) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+
+  const handleSave = useCallback(
+    async (status = 'Saved') => {
+      setLoading(true);
+      try {
+        const response = await authFetch(
+          `${import.meta.env.VITE_API_URL}/api/blogs/${blogId}`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              ...blog,
+            }),
           },
-          body: JSON.stringify({
-            ...blog,
-          }),
-        },
-      );
+        );
 
-      if (response.ok) {
-        // lets make a toast
-
-        addToast('Saved');
-      } else {
-        throw new Error('Issues saving the post.');
+        if (response.ok) {
+          addToast(status);
+        } else {
+          throw new Error('Issues saving the post.');
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [blogId, blog, addToast],
+  );
+
+  const isDirty = useRef(false);
+
+  useEffect(() => {
+    if (!isDirty.current) return;
+
+    const autosaveTimeout = setTimeout(() => {
+      isDirty.current = false;
+      handleSave('Autosave');
+    }, 3000);
+
+    return () => {
+      clearTimeout(autosaveTimeout);
+    };
+  }, [blog, handleSave]);
 
   const handlePublish = async () => {
     setLoading(true);
@@ -135,22 +160,6 @@ const Edit = () => {
     }
   };
 
-  const addToast = (status) => {
-    const id = crypto.randomUUID();
-    const currentToasts = [...toasts];
-    setToasts([
-      ...currentToasts,
-      {
-        id,
-        status,
-      },
-    ]);
-  };
-
-  const removeToast = useCallback((id) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
-  }, []);
-
   if (blog === null) {
     return <Loading />;
   }
@@ -176,16 +185,20 @@ const Edit = () => {
         <div className={styles.header}>
           <input
             className={styles.titleInput}
-            onChange={(e) =>
-              setBlog((prev) => ({ ...prev, title: e.target.value }))
-            }
+            onChange={(e) => {
+              isDirty.current = true;
+              setBlog((prev) => ({ ...prev, title: e.target.value }));
+            }}
             value={blog.title}
             placeholder='Untitled'
           />
         </div>
         <div className={styles.body}>
           <Editor
-            onChange={(value) => setBlog((prev) => ({ ...prev, body: value }))}
+            onChange={(value) => {
+              isDirty.current = true;
+              setBlog((prev) => ({ ...prev, body: value }));
+            }}
             initialMarkdown={blog.body}
           />
         </div>
