@@ -10,10 +10,7 @@ const Edit = () => {
   const navigate = useNavigate();
 
   const { blogId } = useParams();
-
-  const [markdown, setMarkdown] = useState(null);
-  const [published, setPublished] = useState(null);
-  const [title, setTitle] = useState(null);
+  const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(false);
   const [toasts, setToasts] = useState([]);
 
@@ -43,9 +40,7 @@ const Edit = () => {
         }
 
         const data = await response.json();
-        setTitle(data.blog.title ?? '');
-        setMarkdown(data.blog.body ?? '');
-        setPublished(data.blog.published);
+        setBlog(data.blog);
       } catch (error) {
         console.log(error);
         navigate('/login');
@@ -66,8 +61,7 @@ const Edit = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            title: title,
-            body: markdown,
+            ...blog,
           }),
         },
       );
@@ -97,14 +91,14 @@ const Edit = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            published: !published,
+            published: !blog.published,
           }),
         },
       );
 
       if (response.ok) {
         const data = await response.json();
-        setPublished(data.blog.published);
+        setBlog((prev) => ({ ...prev, published: data.blog.published }));
         addToast(data.blog.published ? 'Hidden' : 'Published');
       } else {
         throw new Error('Issues saving the post.');
@@ -157,7 +151,7 @@ const Edit = () => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  if (markdown === null && title === null) {
+  if (blog === null) {
     return <Loading />;
   }
 
@@ -182,13 +176,18 @@ const Edit = () => {
         <div className={styles.header}>
           <input
             className={styles.titleInput}
-            onChange={(e) => setTitle(e.target.value)}
-            value={title}
+            onChange={(e) =>
+              setBlog((prev) => ({ ...prev, title: e.target.value }))
+            }
+            value={blog.title}
             placeholder='Untitled'
           />
         </div>
         <div className={styles.body}>
-          <Editor onChange={setMarkdown} initialMarkdown={markdown} />
+          <Editor
+            onChange={(value) => setBlog((prev) => ({ ...prev, body: value }))}
+            initialMarkdown={blog.body}
+          />
         </div>
         <div className={styles.footer}>
           <div className={styles.footerButtons}>
@@ -217,7 +216,7 @@ const Edit = () => {
                 onClick={handlePublish}
                 disabled={loading}
               >
-                {published ? 'Publish' : 'Hide'}
+                {blog.published ? 'Publish' : 'Hide'}
               </button>
             </div>
           </div>
