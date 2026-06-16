@@ -55,11 +55,8 @@
   gap: 10px;
 }
 
-.delete {
-  border-color: var(--delete);
-}
-
-.footerButtons > div > button {
+.footerButtons > div > button,
+.deleteDialogButtons > button {
   padding: 8px 16px;
   border: 2px solid transparent;
   border-radius: 8px;
@@ -70,6 +67,7 @@
 }
 
 .delete {
+  border-color: var(--delete);
   background-color: var(--delete);
 }
 
@@ -88,4 +86,31 @@
 .publish:hover,
 .publish:focus {
   background-color: var(--publish-hover);
+}
+
+.deleteDialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.deleteDialog[open] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem 5rem;
+  border-radius: 8px;
+}
+
+.deleteDialogButtons {
+  display: flex;
+  gap: 3rem;
+}
+
+.cancel {
+  background-color: var(--cancel);
+}
+
+.cancel:hover,
+.cancel:focus {
+  background-color: var(--cancel-hover);
 }

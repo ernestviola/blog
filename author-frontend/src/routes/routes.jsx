@@ -4,14 +4,20 @@ import Login from '@routes/Login';
 import Signup from '@routes/Signup';
 import Splat from '@routes/Splat';
 import NavbarLayout from '@layouts/NavbarLayout';
+import ProtectedRoute from '@components/ProtectedRoute';
 
 const routes = [
   {
-    element: <NavbarLayout />,
-    path: '/blogs',
+    element: <ProtectedRoute />,
     children: [
-      { index: true, Component: Blogs },
-      { path: ':blogId/edit', Component: Edit },
+      {
+        element: <NavbarLayout />,
+        path: '/blogs',
+        children: [
+          { index: true, Component: Blogs },
+          { path: ':blogId/edit', Component: Edit },
+        ],
+      },
     ],
   },
   { path: '/signup', element: <Signup /> },

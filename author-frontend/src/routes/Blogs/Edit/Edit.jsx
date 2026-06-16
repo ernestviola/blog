@@ -1,5 +1,5 @@
 import Editor from '@components/Editor';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import styles from './edit.module.css';
 import { authFetch } from '@utils/auth.js';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -8,13 +8,21 @@ import Toast from '@components/Toast';
 
 const Edit = () => {
   const navigate = useNavigate();
+
+  const { blogId } = useParams();
+
   const [markdown, setMarkdown] = useState(null);
   const [published, setPublished] = useState(null);
   const [title, setTitle] = useState(null);
   const [loading, setLoading] = useState(false);
   const [toasts, setToasts] = useState([]);
 
-  const { blogId } = useParams();
+  const dialogRef = useRef(null);
+  const openDialog = () => {
+    dialogRef.current.showModal();
+    dialogRef.current.focus();
+  };
+  const closeDialog = () => dialogRef.current.close();
 
   useEffect(() => {
     document.title = 'New Blog';
@@ -37,7 +45,7 @@ const Edit = () => {
         const data = await response.json();
         setTitle(data.blog.title ?? '');
         setMarkdown(data.blog.body ?? '');
-        setMarkdown(data.blog.published);
+        setPublished(data.blog.published);
       } catch (error) {
         console.log(error);
         navigate('/login');
@@ -129,61 +137,77 @@ const Edit = () => {
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.toasts}>
-        {toasts.map((toast) => {
-          return (
-            <Toast
-              key={toast.id}
-              color='#55ff'
-              id={toast.id}
-              removeToast={removeToast}
-              msUntilRemoval={1000}
-            >
-              {toast.status}
-            </Toast>
-          );
-        })}
-      </div>
-      <div className={styles.header}>
-        <input
-          className={styles.titleInput}
-          onChange={(e) => setTitle(e.target.value)}
-          value={title}
-          placeholder='Untitled'
-        />
-      </div>
-      <div className={styles.body}>
-        <Editor onChange={setMarkdown} initialMarkdown={markdown} />
-      </div>
-      <footer className={styles.footer}>
-        <div className={styles.footerButtons}>
-          <div className={styles.left}>
-            <button className={styles.delete} title='Delete' disabled={loading}>
-              Delete
-            </button>
-          </div>
-          <div className={styles.right}>
-            <button
-              className={styles.save}
-              title='Save'
-              onClick={handleSave}
-              disabled={loading}
-            >
-              Save
-            </button>
-            <button
-              className={styles.publish}
-              title='Publish'
-              onClick={handlePublish}
-              disabled={loading}
-            >
-              {published ? 'Publish' : 'Hide'}
-            </button>
+    <>
+      <div className={styles.container}>
+        <div className={styles.toasts}>
+          {toasts.map((toast) => {
+            return (
+              <Toast
+                key={toast.id}
+                color='#55ff'
+                id={toast.id}
+                removeToast={removeToast}
+                msUntilRemoval={1000}
+              >
+                {toast.status}
+              </Toast>
+            );
+          })}
+        </div>
+        <div className={styles.header}>
+          <input
+            className={styles.titleInput}
+            onChange={(e) => setTitle(e.target.value)}
+            value={title}
+            placeholder='Untitled'
+          />
+        </div>
+        <div className={styles.body}>
+          <Editor onChange={setMarkdown} initialMarkdown={markdown} />
+        </div>
+        <div className={styles.footer}>
+          <div className={styles.footerButtons}>
+            <div className={styles.left}>
+              <button
+                onClick={openDialog}
+                className={styles.delete}
+                title='Delete'
+                disabled={loading}
+              >
+                Delete
+              </button>
+            </div>
+            <div className={styles.right}>
+              <button
+                className={styles.save}
+                title='Save'
+                onClick={handleSave}
+                disabled={loading}
+              >
+                Save
+              </button>
+              <button
+                className={styles.publish}
+                title='Publish'
+                onClick={handlePublish}
+                disabled={loading}
+              >
+                {published ? 'Publish' : 'Hide'}
+              </button>
+            </div>
           </div>
         </div>
-      </footer>
-    </div>
+      </div>
+      <dialog ref={dialogRef} className={styles.deleteDialog}>
+        <h2>Are you sure you want to delete?</h2>
+        <div className={styles.deleteDialogButtons}>
+          <button onClick={closeDialog} className={styles.cancel}>
+            Cancel
+          </button>
+          <button className={styles.delete}>Delete</button>
+        </div>
+      </dialog>
+    </>
   );
 };
 
