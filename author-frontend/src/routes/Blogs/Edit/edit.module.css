@@ -8,6 +8,16 @@
   max-width: 800px;
 }
 
+.toasts {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+}
+
 .titleInput {
   padding: 0;
   width: 100%;

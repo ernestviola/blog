@@ -29,7 +29,6 @@ const Home = () => {
 
         if (response.ok) {
           const data = await response.json();
-          console.log(data.blogs);
           setBlogs(data.blogs);
         }
       } catch {

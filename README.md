@@ -9,7 +9,9 @@ This project is ran on 3 different servers.
 ## TODO
 
 - creating a new post should create a post then navigate to edit that post
-  - should then be allowed to save publish/hide or delete those posts
+  - publish/hide
+  - delete those posts
+  - Add a toast to the page that disappears
 
 - Autoasving the new posts
 

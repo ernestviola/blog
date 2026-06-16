@@ -1,15 +1,18 @@
 import Editor from '@components/Editor';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import styles from './edit.module.css';
 import { authFetch } from '@utils/auth.js';
 import { useNavigate, useParams } from 'react-router-dom';
 import Loading from '@components/Loading';
+import Toast from '@components/Toast';
 
 const Edit = () => {
   const navigate = useNavigate();
   const [markdown, setMarkdown] = useState(null);
   const [title, setTitle] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [toasts, setToasts] = useState([]);
+
   const { blogId } = useParams();
 
   useEffect(() => {
@@ -35,11 +38,12 @@ const Edit = () => {
         setMarkdown(data.blog.body ?? '');
       } catch (error) {
         console.log(error);
+        navigate('/login');
       }
     }
 
     fetchBlogData();
-  }, []);
+  }, [blogId, navigate]);
 
   const handleSave = async () => {
     setLoading(true);
@@ -59,8 +63,9 @@ const Edit = () => {
       );
 
       if (response.ok) {
-        const data = await response.json();
-        if (data.success) navigate('/blogs', { viewTransition: true });
+        // lets make a toast
+
+        addToast('Saved');
       } else {
         throw new Error('Issues saving the post.');
       }
@@ -102,12 +107,43 @@ const Edit = () => {
     }
   };
 
+  const addToast = (status) => {
+    const id = crypto.randomUUID();
+    const currentToasts = [...toasts];
+    setToasts([
+      ...currentToasts,
+      {
+        id,
+        status,
+      },
+    ]);
+  };
+
+  const removeToast = useCallback((id) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+
   if (markdown === null && title === null) {
     return <Loading />;
   }
 
   return (
     <div className={styles.container}>
+      <div className={styles.toasts}>
+        {toasts.map((toast) => {
+          return (
+            <Toast
+              key={toast.id}
+              color='#55ff'
+              id={toast.id}
+              removeToast={removeToast}
+              msUntilRemoval={1000}
+            >
+              {toast.status}
+            </Toast>
+          );
+        })}
+      </div>
       <div className={styles.header}>
         <input
           className={styles.titleInput}
@@ -116,7 +152,6 @@ const Edit = () => {
           placeholder='Untitled'
         />
       </div>
-
       <div className={styles.body}>
         <Editor onChange={setMarkdown} initialMarkdown={markdown} />
       </div>
@@ -131,7 +166,7 @@ const Edit = () => {
             <button
               className={styles.save}
               title='Save'
-              onClick={() => handleSave()}
+              onClick={handleSave}
               disabled={loading}
             >
               Save
@@ -139,7 +174,7 @@ const Edit = () => {
             <button
               className={styles.publish}
               title='Publish'
-              onClick={() => handlePublish()}
+              onClick={handlePublish}
               disabled={loading}
             >
               Publish

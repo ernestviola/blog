@@ -1,8 +1,7 @@
 import styles from './toast.module.css';
-import { IoIosClose } from 'react-icons/io';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
-const Toast = ({ removeToast, color, children }) => {
+const Toast = ({ id, removeToast, color, msUntilRemoval = null, children }) => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -14,13 +13,34 @@ const Toast = ({ removeToast, color, children }) => {
       clearTimeout(timeout);
     };
   }, []);
+
+  const handleRemove = useCallback(() => {
+    setMounted(false);
+
+    setTimeout(() => {
+      removeToast(id);
+    }, 300);
+  }, [removeToast, id]);
+
+  useEffect(() => {
+    let timeout;
+
+    if (msUntilRemoval) {
+      timeout = setTimeout(() => {
+        handleRemove();
+      }, msUntilRemoval);
+    }
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [msUntilRemoval, handleRemove]);
   return (
     <div
       style={{ backgroundColor: color }}
       className={`${styles.toast} ${mounted ? styles.toastAnimation : ''}`}
-      onClick={removeToast}
+      onClick={handleRemove}
     >
-      <IoIosClose className={styles.closeBtn} /> {children}
+      {children}
     </div>
   );
 };
