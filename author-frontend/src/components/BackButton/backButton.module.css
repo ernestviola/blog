@@ -1,0 +1,19 @@
+.backButton {
+  display: flex;
+  align-items: center;
+  color: var(--gray);
+  background-color: transparent;
+  border: none;
+  gap: 1rem;
+  font-size: 2rem;
+  width: fit-content;
+  padding: 0px;
+}
+.icon {
+  font-size: 3rem;
+}
+
+.backButton:hover,
+.backButton:focus {
+  color: var(--gray-hover);
+}

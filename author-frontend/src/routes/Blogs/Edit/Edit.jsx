@@ -5,6 +5,7 @@ import { authFetch } from '@utils/auth.js';
 import { useNavigate, useParams } from 'react-router-dom';
 import Loading from '@components/Loading';
 import Toast from '@components/Toast';
+import BackButton from '@components/BackButton';
 
 const Edit = () => {
   const navigate = useNavigate();
@@ -182,7 +183,11 @@ const Edit = () => {
             );
           })}
         </div>
+
         <div className={styles.header}>
+          <BackButton />
+        </div>
+        <div className={styles.body}>
           <input
             className={styles.titleInput}
             onChange={(e) => {
@@ -192,8 +197,6 @@ const Edit = () => {
             value={blog.title}
             placeholder='Untitled'
           />
-        </div>
-        <div className={styles.body}>
           <Editor
             onChange={(value) => {
               isDirty.current = true;

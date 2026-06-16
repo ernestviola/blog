@@ -4,8 +4,8 @@
   --accent: #f5d491;
   --accent-hover: #ee9e00;
 
-  --gray: #d9d9d9;
-  --gray-hover: #ededed;
+  --gray: #a7a7a7;
+  --cancel-hover: #ededed;
   --red: #ff0000;
   --default-text: white;
 
@@ -18,6 +18,6 @@
   --publish: #f5d491;
   --publish-hover: #ee9e00;
 
-  --cancel: #d9d9d9;
+  --cancel: #a7a7a7;
   --cancel-hover: #ededed;
 }

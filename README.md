@@ -8,8 +8,6 @@ This project is ran on 3 different servers.
 
 ## TODO
 
-- Add a back button from Edit
-
 - build a landing page -&gt; lets people nav to login and logout
   - maybe just copy medium
 
