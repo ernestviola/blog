@@ -37,7 +37,7 @@ const Edit = () => {
         const data = await response.json();
         setTitle(data.blog.title ?? '');
         setMarkdown(data.blog.body ?? '');
-        setPublished(data.blog.published ?? false);
+        setMarkdown(data.blog.published);
       } catch (error) {
         console.log(error);
         navigate('/login');
@@ -82,9 +82,9 @@ const Edit = () => {
     setLoading(true);
     try {
       const response = await authFetch(
-        `${import.meta.env.VITE_API_URL}/api/blogs`,
+        `${import.meta.env.VITE_API_URL}/api/blogs/${blogId}`,
         {
-          method: 'POST',
+          method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -96,9 +96,8 @@ const Edit = () => {
 
       if (response.ok) {
         const data = await response.json();
-
         setPublished(data.blog.published);
-        addToast(published ? 'Hidden' : 'Published');
+        addToast(data.blog.published ? 'Hidden' : 'Published');
       } else {
         throw new Error('Issues saving the post.');
       }
@@ -179,7 +178,7 @@ const Edit = () => {
               onClick={handlePublish}
               disabled={loading}
             >
-              {published ? 'Hide' : 'Publish'}
+              {published ? 'Publish' : 'Hide'}
             </button>
           </div>
         </div>

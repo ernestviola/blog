@@ -4,16 +4,16 @@ import { prisma } from '../libs/prisma.js';
 
 const blogController = {};
 const blogValidation = [
-  body('title').trim().notEmpty().optional(),
-  body('body').trim().notEmpty().optional(),
+  body('title').trim().optional(),
+  body('body').trim().optional(),
   body('published').isBoolean().optional(),
 ];
 
 const searchParams = [param('title'), param['userId'], param('blogId')];
 
 const putBlogValidation = [
-  body('title').trim().notEmpty().optional(),
-  body('body').trim().notEmpty().optional(),
+  body('title').trim().optional(),
+  body('body').trim().optional(),
   body('published').isBoolean().optional(),
 ];
 
