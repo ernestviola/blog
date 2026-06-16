@@ -9,6 +9,7 @@ import Toast from '@components/Toast';
 const Edit = () => {
   const navigate = useNavigate();
   const [markdown, setMarkdown] = useState(null);
+  const [published, setPublished] = useState(null);
   const [title, setTitle] = useState(null);
   const [loading, setLoading] = useState(false);
   const [toasts, setToasts] = useState([]);
@@ -36,6 +37,7 @@ const Edit = () => {
         const data = await response.json();
         setTitle(data.blog.title ?? '');
         setMarkdown(data.blog.body ?? '');
+        setPublished(data.blog.published ?? false);
       } catch (error) {
         console.log(error);
         navigate('/login');
@@ -87,16 +89,16 @@ const Edit = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            title: title,
-            body: markdown,
-            published: true,
+            published: !published,
           }),
         },
       );
 
       if (response.ok) {
         const data = await response.json();
-        if (data.success) navigate('/blogs', { viewTransition: true });
+
+        setPublished(data.blog.published);
+        addToast(published ? 'Hidden' : 'Published');
       } else {
         throw new Error('Issues saving the post.');
       }
@@ -177,7 +179,7 @@ const Edit = () => {
               onClick={handlePublish}
               disabled={loading}
             >
-              Publish
+              {published ? 'Hide' : 'Publish'}
             </button>
           </div>
         </div>
