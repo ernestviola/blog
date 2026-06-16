@@ -8,8 +8,7 @@ This project is ran on 3 different servers.
 
 ## TODO
 
-- Update style for Blog Edit for mobile
-  - toast
+- Add a back button from Edit
 
 - build a landing page -&gt; lets people nav to login and logout
   - maybe just copy medium
