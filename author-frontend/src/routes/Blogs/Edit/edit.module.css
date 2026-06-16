@@ -6,6 +6,7 @@
   margin: 0 auto;
   width: 100%;
   max-width: 800px;
+  padding: 1rem;
 }
 
 .toasts {
@@ -37,10 +38,6 @@
   flex-grow: 1;
 }
 
-.footer {
-  padding: 16px;
-}
-
 .footerButtons {
   margin: 0 auto;
   display: flex;
@@ -55,7 +52,22 @@
   gap: 10px;
 }
 
-.footerButtons > div > button,
+@media screen and (max-width: 500px) {
+  .right {
+    display: block;
+  }
+
+  .left,
+  .right {
+    display: contents;
+  }
+
+  .footerButton {
+    flex: 1;
+  }
+}
+
+.footerButton,
 .deleteDialogButtons > button {
   padding: 8px 16px;
   border: 2px solid transparent;

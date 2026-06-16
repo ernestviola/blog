@@ -207,7 +207,7 @@ const Edit = () => {
             <div className={styles.left}>
               <button
                 onClick={openDialog}
-                className={styles.delete}
+                className={`${styles.delete} ${styles.footerButton}`}
                 title='Delete'
                 disabled={loading}
               >
@@ -216,7 +216,7 @@ const Edit = () => {
             </div>
             <div className={styles.right}>
               <button
-                className={styles.save}
+                className={`${styles.save} ${styles.footerButton}`}
                 title='Save'
                 onClick={handleSave}
                 disabled={loading}
@@ -224,7 +224,7 @@ const Edit = () => {
                 Save
               </button>
               <button
-                className={styles.publish}
+                className={`${styles.publish} ${styles.footerButton}`}
                 title='Publish'
                 onClick={handlePublish}
                 disabled={loading}
