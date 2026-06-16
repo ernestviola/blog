@@ -1,11 +1,10 @@
 .header {
   max-width: 600px;
   width: 100%;
+  padding: 2rem;
   margin: auto;
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  padding: 2rem;
   gap: 1rem;
 }
 

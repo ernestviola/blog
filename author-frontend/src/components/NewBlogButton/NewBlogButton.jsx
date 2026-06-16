@@ -49,7 +49,7 @@ const NewBlogButton = () => {
       aria-label='New Blog'
     >
       <BiPlus className={styles.plusIcon} />
-      New
+      <span className={styles.buttonText}>New</span>
     </button>
   );
 };
