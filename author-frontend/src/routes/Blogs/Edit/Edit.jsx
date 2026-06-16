@@ -116,6 +116,31 @@ const Edit = () => {
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      setLoading(true);
+      const response = await authFetch(
+        `${import.meta.env.VITE_API_URL}/api/blogs/${blogId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error('There was a problem deleting the post.');
+      }
+
+      return navigate('/blogs', { viewTransition: true });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const addToast = (status) => {
     const id = crypto.randomUUID();
     const currentToasts = [...toasts];
@@ -204,7 +229,9 @@ const Edit = () => {
           <button onClick={closeDialog} className={styles.cancel}>
             Cancel
           </button>
-          <button className={styles.delete}>Delete</button>
+          <button className={styles.delete} onClick={handleDelete}>
+            Delete
+          </button>
         </div>
       </dialog>
     </>
