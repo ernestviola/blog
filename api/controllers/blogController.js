@@ -1,4 +1,4 @@
-import { body, validationResult, matchedData, param } from 'express-validator';
+import { body, validationResult, matchedData, query } from 'express-validator';
 
 import { prisma } from '../libs/prisma.js';
 
@@ -9,7 +9,7 @@ const blogValidation = [
   body('published').isBoolean().optional(),
 ];
 
-const searchParams = [param('title'), param['userId'], param('blogId')];
+const searchParams = [query('title').trim().optional()];
 
 const putBlogValidation = [
   body('title').trim().optional(),
@@ -17,45 +17,62 @@ const putBlogValidation = [
   body('published').isBoolean().optional(),
 ];
 
-blogController.getAll = async (req, res, next) => {
-  try {
-    // check if user is logged in. if true then return their unpublished posts
-    let blogs;
-    if (req.user) {
-      blogs = await prisma.blog.findMany({
-        include: {
-          user: {
-            select: { username: { select: { username: true } } },
+blogController.getAll = [
+  searchParams,
+  async (req, res, next) => {
+    try {
+      // check if user is logged in. if true then return their unpublished posts
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        const fieldErrors = {};
+        errors.array().forEach((error) => {
+          fieldErrors[error.path] = error.msg;
+        });
+        return res.status(400).json({ fieldErrors });
+      }
+
+      const { title } = matchedData(req);
+
+      let blogs;
+      if (req.user) {
+        blogs = await prisma.blog.findMany({
+          include: {
+            user: {
+              select: { username: { select: { username: true } } },
+            },
           },
-        },
-        where: {
-          OR: [{ published: true }, { userId: req.user.id }],
-        },
-      });
-    } else {
-      // if not only return published posts
-      blogs = await prisma.blog.findMany({
-        include: {
-          user: {
-            select: { username: { select: { username: true } } },
+          where: {
+            OR: [{ published: true }, { userId: req.user.id }],
+            title: {
+              contains: title,
+              mode: 'insensitive',
+            },
           },
-        },
-        where: {
-          published: true,
-        },
-      });
+        });
+      } else {
+        // if not only return published posts
+        blogs = await prisma.blog.findMany({
+          include: {
+            user: {
+              select: { username: { select: { username: true } } },
+            },
+          },
+          where: {
+            published: true,
+          },
+        });
+      }
+
+      if (!blogs.length) {
+        return res.status(404).json({ message: 'Not found.' });
+      }
+
+      return res.status(200).json({ success: true, blogs });
+    } catch (error) {
+      next(error);
     }
-
-    if (!blogs.length) {
-      return res.status(404).json({ message: 'Not found.' });
-    }
-
-    return res.status(200).json({ success: true, blogs });
-  } catch (error) {
-    next(error);
-  }
-};
-
+  },
+];
 blogController.getSingle = async (req, res, next) => {
   const { id } = req.params;
   try {

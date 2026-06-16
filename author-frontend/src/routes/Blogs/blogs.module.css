@@ -1,5 +1,39 @@
+.header {
+  max-width: 600px;
+  width: 100%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 2rem;
+  gap: 1rem;
+}
+
+.searchContainer {
+  flex: auto;
+  position: relative;
+}
+
+.searchIcon {
+  position: absolute;
+  color: var(--gray);
+  font-size: 3rem;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 2rem;
+  padding: 0;
+}
+
+.search {
+  padding: 10px 15px 10px 5rem;
+  border: 2px solid black;
+  border-radius: 9999px;
+  width: 100%;
+  display: block;
+}
+
 .blogs {
-  width: 800px;
+  max-width: 800px;
   margin: 0 auto;
   list-style: none;
   display: flex;
@@ -10,6 +44,7 @@
 .blogItem {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 2rem;
 }
 
@@ -21,7 +56,7 @@
 
 .content {
   flex: 1;
-  min-width: 0;
+  min-width: 200px;
 }
 
 .title {

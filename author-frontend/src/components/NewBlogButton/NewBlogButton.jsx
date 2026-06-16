@@ -2,6 +2,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authFetch } from '@utils/auth.js';
 
+import { BiPlus } from 'react-icons/bi';
+
+import styles from './newBlogButton.module.css';
+
 const NewBlogButton = () => {
   const navigate = useNavigate();
 
@@ -37,8 +41,15 @@ const NewBlogButton = () => {
     }
   };
   return (
-    <button onClick={handleNewPost} disabled={loading}>
-      New Blog
+    <button
+      onClick={handleNewPost}
+      disabled={loading}
+      className={styles.button}
+      title='New Blog'
+      aria-label='New Blog'
+    >
+      <BiPlus className={styles.plusIcon} />
+      New
     </button>
   );
 };
