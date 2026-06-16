@@ -8,20 +8,12 @@ This project is ran on 3 different servers.
 
 ## TODO
 
-- creating a new post should create a post then navigate to edit that post
-  - publish/hide
-  - delete those posts
-  - Add a toast to the page that disappears
-
-- Autoasving the new posts
-
-- Query filter for posts
-
-- Allow users to delete their owned posts
-  - Should have a dialog which confirms deletion
-  - If a user leaves a newly made post, we should confirm if they want to leave OR we can create a post on route to new and then redirect them to EDIT that post. THEN we could have autosaves
+- Update style for Blog Edit for mobile
+  - footer buttons stack all on the right. figure out a styling and then update
+  - should still have some margin on smaller screens
 
 - build a landing page -&gt; lets people nav to login and logout
+  - maybe just copy medium
 
 ## API
 
@@ -31,6 +23,3 @@ This project is ran on 3 different servers.
 
 /api/users
 /api/blogs
-/api/comments
-
-###

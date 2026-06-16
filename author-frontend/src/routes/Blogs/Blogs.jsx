@@ -86,9 +86,10 @@ const Home = () => {
             </div>
             <div className={styles.content}>
               <h2 className={styles.title}>{blog.title}</h2>
+              <p>Status: {blog.published ? 'Published' : 'Hidden'}</p>
               <p>Author: {blog.user.username.username}</p>
               <p>
-                Last Updated:{' '}
+                Updated:{' '}
                 {new Date(blog.updated).toLocaleDateString('en-US', {
                   weekday: 'short',
                   month: 'long',
@@ -97,7 +98,6 @@ const Home = () => {
                 })}
               </p>
             </div>
-            <span>Status: {blog.published ? 'Published' : 'Hidden'}</span>
 
             <Link className={styles.editButton} to={`/blogs/${blog.id}/edit`}>
               <BiEdit className={styles.edit} />

@@ -34,6 +34,7 @@
 
 .blogs {
   max-width: 800px;
+  padding: 1rem;
   margin: 0 auto;
   list-style: none;
   display: flex;
@@ -51,12 +52,12 @@
 .blogStat {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.5rem;
 }
 
 .content {
   flex: 1;
-  min-width: 200px;
+  min-width: 100px;
 }
 
 .title {
