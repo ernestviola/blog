@@ -218,7 +218,7 @@ const Edit = () => {
               <button
                 className={`${styles.save} ${styles.footerButton}`}
                 title='Save'
-                onClick={handleSave}
+                onClick={() => handleSave()}
                 disabled={loading}
               >
                 Save

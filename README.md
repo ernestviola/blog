@@ -9,8 +9,7 @@ This project is ran on 3 different servers.
 ## TODO
 
 - Update style for Blog Edit for mobile
-  - footer buttons stack all on the right. figure out a styling and then update
-  - should still have some margin on smaller screens
+  - toast
 
 - build a landing page -&gt; lets people nav to login and logout
   - maybe just copy medium
