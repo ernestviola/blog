@@ -1,0 +1,23 @@
+:root {
+  --background-gradient: linear-gradient(#110b11, #1a001a);
+
+  --accent: #f5d491;
+  --accent-hover: #ee9e00;
+
+  --gray: #a7a7a7;
+  --gray-hover: #ededed;
+  --red: #ff0000;
+  --default-text: white;
+
+  --delete: #b30000;
+  --delete-hover: #ff0000;
+
+  --save: #45a845;
+  --save-hover: #00a700;
+
+  --publish: #f5d491;
+  --publish-hover: #ee9e00;
+
+  --cancel: #a7a7a7;
+  --cancel-hover: #ededed;
+}

@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "paths": {
+      "@utils/*": ["./src/utils/*/index.jsx", "./src/utils/*"],
+      "@components/*": ["./src/components/*/index.jsx", "./src/components/*"],
+      "@routes/*": ["./src/routes/*/index.jsx", "./src/routes/*"],
+      "@layouts/*": ["./src/layouts/*/index.jsx", "./src/layouts/*"],
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src"]
+}

@@ -1,0 +1,25 @@
+.hero {
+  display: inline-block;
+  margin: 30rem 20rem;
+}
+
+.block {
+  display: block;
+}
+
+.title {
+  font-size: 10rem;
+  line-height: 0.9;
+}
+
+.subtitle {
+  font-size: 3rem;
+  margin-top: 2rem;
+  display: flex;
+  gap: 2rem;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+}
