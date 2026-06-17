@@ -5,7 +5,10 @@ import passport from './libs/passport.js';
 import blogRouter from './routes/blogRouter.js';
 
 const PORT = process.env.PORT || 3000;
-const allowedOrigins = [process.env.AUTHOR_CLIENT_URL];
+const allowedOrigins = [
+  process.env.AUTHOR_CLIENT_URL,
+  process.env.READER_CLIENT_URL,
+];
 
 const app = express();
 
