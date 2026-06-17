@@ -1,3 +1,4 @@
+import Landing from '@routes/Landing';
 import Blogs from '@routes/Blogs';
 import Edit from '@routes/Blogs/Edit';
 import Login from '@routes/Login';
@@ -22,7 +23,14 @@ const routes = [
   },
   { path: '/signup', element: <Signup /> },
   { path: '/login', element: <Login /> },
-  { path: '*', element: <Splat /> },
+  {
+    element: <NavbarLayout />,
+    path: '/',
+    children: [
+      { index: true, Component: Landing },
+      { path: '*', Component: Splat },
+    ],
+  },
 ];
 
 export default routes;
