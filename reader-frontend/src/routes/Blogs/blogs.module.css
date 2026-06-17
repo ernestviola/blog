@@ -1,0 +1,96 @@
+.header {
+  max-width: 600px;
+  width: 100%;
+  padding: 2rem;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.searchContainer {
+  flex: auto;
+  position: relative;
+}
+
+.searchIcon {
+  position: absolute;
+  color: var(--gray);
+  font-size: 3rem;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 2rem;
+  padding: 0;
+}
+
+.search {
+  padding: 10px 15px 10px 5rem;
+  border: 2px solid black;
+  border-radius: 9999px;
+  width: 100%;
+  display: block;
+}
+
+.blogs {
+  max-width: 800px;
+  padding: 1rem;
+  margin: 0 auto;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.blogItem {
+  padding: 1rem 0px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  transition: 0.1s ease-in-out;
+}
+
+.blogItem:hover {
+  background-color: #50257f4a;
+}
+
+.blogItem:hover .title {
+  color: var(--accent);
+}
+
+.blogStat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.content {
+  flex: 1;
+  min-width: 100px;
+}
+
+.title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.heart {
+  font-size: 2.4rem;
+  color: var(--red);
+}
+
+.eye {
+  color: var(--accent);
+  font-size: 2.4rem;
+}
+
+.edit {
+  color: var(--gray);
+  font-size: 3.2rem;
+}
+
+.editButton {
+  background-color: transparent;
+  border: none;
+}
