@@ -1,5 +1,6 @@
 import { useParams } from 'react-router';
 import { useState, useEffect } from 'react';
+import CommentForm from '@components/Comments/CommentForm';
 
 const Comments = () => {
   const { blogId } = useParams();
@@ -33,6 +34,7 @@ const Comments = () => {
     <div>
       <hr />
       <h2>Comments</h2>
+      <CommentForm />
     </div>
   );
 };
