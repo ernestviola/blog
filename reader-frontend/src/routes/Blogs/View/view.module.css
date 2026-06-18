@@ -1,6 +1,135 @@
 .container {
-  flex: 1;
-  max-width: 800px;
-  width: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   margin: 0 auto;
+  width: 100%;
+  max-width: 800px;
+  padding: 1rem;
+}
+
+.toasts {
+  position: fixed;
+  top: 0;
+  right: 50%;
+  transform: translateX(50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+}
+
+.titleInput {
+  padding: 0;
+  width: 100%;
+  color: white;
+  font-size: 3.2rem;
+  font-weight: 700;
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+
+.titleInput::placeholder {
+  color: #adb5bd;
+}
+
+.body {
+  flex-grow: 1;
+}
+
+.footerButtons {
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.right {
+  display: flex;
+  gap: 10px;
+}
+
+@media screen and (max-width: 500px) {
+  .right {
+    display: block;
+  }
+
+  .left,
+  .right {
+    display: contents;
+  }
+
+  .footerButton {
+    flex: 1;
+  }
+
+  .deleteDialog[open] {
+    padding: 2rem 1rem !important;
+  }
+}
+
+.footerButton {
+  width: 90px;
+}
+
+.footerButton,
+.deleteDialogButtons > button {
+  padding: 0.6rem 1rem;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1.5rem;
+  transition: background-color 0.2s ease-out;
+}
+
+.delete {
+  border-color: var(--delete);
+  background-color: var(--delete);
+}
+
+.delete:hover,
+.delete:focus {
+  background-color: var(--delete-hover);
+}
+
+.save:hover,
+.save:focus {
+  background-color: var(--save-hover);
+}
+.publish {
+  background-color: var(--publish);
+}
+.publish:hover,
+.publish:focus {
+  background-color: var(--publish-hover);
+}
+
+.deleteDialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.deleteDialog[open] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 2rem;
+  border-radius: 8px;
+  padding: 2rem 5rem;
+}
+
+.deleteDialogButtons {
+  display: flex;
+  gap: 3rem;
+}
+
+.cancel {
+  background-color: var(--cancel);
+}
+
+.cancel:hover,
+.cancel:focus {
+  background-color: var(--cancel-hover);
 }
