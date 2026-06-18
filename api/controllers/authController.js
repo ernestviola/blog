@@ -70,6 +70,9 @@ authController.signup = [
             create: { username },
           },
         },
+        include: {
+          username: true,
+        },
       });
 
       // return Authorization
