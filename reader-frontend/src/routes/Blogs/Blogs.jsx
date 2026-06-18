@@ -71,7 +71,7 @@ const Home = () => {
       <ul className={styles.blogs}>
         {blogs.map((blog) => (
           <li key={blog.id}>
-            <Link className={styles.blogItem}>
+            <Link className={styles.blogItem} to={`/blogs/${blog.id}`}>
               <div>
                 <div className={styles.blogStat}>
                   <BiHeart className={styles.heart} />
