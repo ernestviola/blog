@@ -125,7 +125,7 @@ const Edit = () => {
       if (response.ok) {
         const data = await response.json();
         setBlog((prev) => ({ ...prev, published: data.blog.published }));
-        addToast(data.blog.published ? 'Hidden' : 'Published');
+        addToast(data.blog.published ? 'Published' : 'Hidden');
       } else {
         throw new Error('Issues saving the post.');
       }
@@ -232,7 +232,7 @@ const Edit = () => {
                 onClick={handlePublish}
                 disabled={loading}
               >
-                {blog.published ? 'Publish' : 'Hide'}
+                {!blog.published ? 'Publish' : 'Hide'}
               </button>
             </div>
           </div>
