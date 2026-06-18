@@ -9,6 +9,12 @@ export const isLoggedIn = () => {
   }
 };
 
+export const getUsernameId = () => {
+  const usernameId = localStorage.getItem('usernameId');
+  if (!usernameId) return null;
+  else return usernameId;
+};
+
 export const getAuthHeader = () => {
   if (isLoggedIn()) {
     return {
