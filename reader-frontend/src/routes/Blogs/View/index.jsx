@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router';
 import Loading from '@components/Loading';
 import Toast from '@components/Toast';
 import BackButton from '@components/BackButton';
+import Comments from '@components/Comments';
 
 const View = () => {
   const navigate = useNavigate();
@@ -84,6 +85,9 @@ const View = () => {
         <div className={styles.body}>
           <h1>{blog.title}</h1>
           <Editor editable={false} initialMarkdown={blog.body} />
+        </div>
+        <div className={styles.footer}>
+          <Comments />
         </div>
       </div>
     </>

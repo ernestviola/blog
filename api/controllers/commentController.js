@@ -19,11 +19,7 @@ commentController.getAll = async (req, res, next) => {
       },
     });
 
-    if (!comments.length) {
-      return res.status(404).json({ message: 'Not found.' });
-    }
-
-    return res.status(200).json(comments);
+    return res.status(200).json({ comments });
   } catch (error) {
     next(error);
   }
