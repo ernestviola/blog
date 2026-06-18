@@ -5,7 +5,7 @@ import { prisma } from '../libs/prisma.js';
 const commentController = {};
 const commentValidation = [
   body('body').trim().notEmpty(),
-  body('username').trim().notEmpty().optional(),
+  body('usernameId').trim().notEmpty(),
 ];
 
 const putcommentValidation = [body('body').trim().notEmpty().optional()];
@@ -38,11 +38,10 @@ commentController.post = [
       return res.status(400).json({ fieldErrors });
     }
     const data = matchedData(req);
-
     try {
       const { blogId } = req.params;
       const comment = await prisma.comment.create({
-        data: { blogId: blogId, userId: req.user?.id ?? null, ...data },
+        data: { blogId: blogId, ...data },
       });
 
       return res.status(200).json({ success: true, comment });

@@ -73,9 +73,17 @@ authController.signup = [
       });
 
       // return Authorization
-      const token = jwt.sign({ sub: user.id }, process.env.JWT_SECRET, {
-        expiresIn: '2 days',
-      });
+      const token = jwt.sign(
+        {
+          sub: user.id,
+          username: user.username.username,
+          usernameId: user.username.id,
+        },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: '2 days',
+        },
+      );
 
       return res.status(201).json({ token });
     } catch (error) {
@@ -131,6 +139,9 @@ authController.login = [
       if (username.includes('@')) {
         // is an email, try email.
         user = await prisma.user.findFirst({
+          include: {
+            username: true,
+          },
           where: {
             email: username,
           },
@@ -156,6 +167,8 @@ authController.login = [
         });
       }
 
+      console.log(user);
+
       // check if password is correct
       const matchedUserPassword = await bcrypt.compare(password, user.password);
       if (!matchedUserPassword) {
@@ -168,9 +181,17 @@ authController.login = [
       }
 
       // return JWT
-      const token = jwt.sign({ sub: user.id }, process.env.JWT_SECRET, {
-        expiresIn: '2 days',
-      });
+      const token = jwt.sign(
+        {
+          sub: user.id,
+          username: user.username.username,
+          usernameId: user.username.id,
+        },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: '2 days',
+        },
+      );
 
       return res.status(200).json({ token });
     } catch (error) {
