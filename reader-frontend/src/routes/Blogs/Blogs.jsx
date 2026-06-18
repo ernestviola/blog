@@ -84,7 +84,6 @@ const Home = () => {
               </div>
               <div className={styles.content}>
                 <h2 className={styles.title}>{blog.title}</h2>
-                <p>Status: {blog.published ? 'Published' : 'Hidden'}</p>
                 <p>Author: {blog.user.username.username}</p>
                 <p>
                   Updated:{' '}
