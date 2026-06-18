@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import styles from '../auth.module.css';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import Toast from '@components/Toast';
+import { isLoggedIn, setUserFields } from '@utils/auth.js';
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -15,6 +17,12 @@ const Signup = () => {
   useEffect(() => {
     document.title = 'Sign up';
   }, []);
+
+  useEffect(() => {
+    if (isLoggedIn()) {
+      navigate('/blogs', { viewTransition: true });
+    }
+  });
 
   /**
    * statuses
@@ -47,7 +55,7 @@ const Signup = () => {
 
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem('Authorization', data.token);
+        setUserFields(data);
       } else if (response.status === 400 || response.status === 409) {
         const data = await response.json();
         const errorObj = Object.values(data.fieldErrors).map((error) => {

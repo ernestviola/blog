@@ -2,13 +2,15 @@ import { useRef, useState } from 'react';
 
 import Editor from '@components/Editor';
 import styles from './commentForm.module.css';
-import { getUsernameId, isLoggedIn } from '@utils/auth.js';
+import { authFetch, getUsernameId, isLoggedIn } from '@utils/auth.js';
+import { useParams } from 'react-router';
 
 const CommentForm = () => {
+  const { blogId } = useParams();
   const dialogRef = useRef();
   const [comment, setComment] = useState('');
 
-  const handleComment = (e) => {
+  const handleComment = async (e) => {
     e.preventDefault();
 
     // check if user has some login credentials
@@ -20,6 +22,28 @@ const CommentForm = () => {
     // comment section
     if (isLoggedIn()) {
       // useAuthFetch to send
+      try {
+        const response = await authFetch(
+          `${import.meta.env.VITE_API_URL}/api/blogs/${blogId}/comments`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              body: comment,
+            }),
+          },
+        );
+        console.log(response);
+        if (!response.ok) {
+          throw new Error('Issues making a comment.');
+        }
+
+        return;
+      } catch (error) {
+        console.log(error);
+      }
     } else if (getUsernameId()) {
       // useFetch with the usernameId
     }

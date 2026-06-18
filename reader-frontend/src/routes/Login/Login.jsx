@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import styles from '../auth.module.css';
 import { Link, useNavigate } from 'react-router';
 import Toast from '@components/Toast';
-import { isLoggedIn } from '@utils/auth.js';
+import { isLoggedIn, setUserFields } from '@utils/auth.js';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -52,7 +52,7 @@ const Login = () => {
 
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem('token', data.token);
+        setUserFields(data);
       } else if (response.status === 401) {
         const data = await response.json();
         const errorObj = [

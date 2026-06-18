@@ -15,6 +15,13 @@ export const getUsernameId = () => {
   else return usernameId;
 };
 
+export const setUserFields = (data) => {
+  localStorage.setItem('token', data.token);
+  const payload = JSON.parse(atob(data.token.split('.')[1]));
+  localStorage.setItem('username', payload?.username);
+  localStorage.setItem('usernameId', payload?.usernameId);
+};
+
 export const getAuthHeader = () => {
   if (isLoggedIn()) {
     return {
@@ -26,6 +33,8 @@ export const getAuthHeader = () => {
 
 export const logout = () => {
   localStorage.removeItem('token');
+  localStorage.removeItem('username');
+  localStorage.removeItem('usernameId');
 };
 
 export const authFetch = async (url, options = {}, navigate) => {
@@ -39,6 +48,8 @@ export const authFetch = async (url, options = {}, navigate) => {
 
   if (response.status === 401) {
     localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    localStorage.removeItem('usernameId');
     navigate('/login', { viewTransition: true });
     return;
   }
