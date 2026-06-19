@@ -23,7 +23,6 @@ const Comments = () => {
         }
 
         const data = await response.json();
-        console.log(data.comments);
         setComments(data.comments ?? []);
       } catch (error) {
         console.log(error);

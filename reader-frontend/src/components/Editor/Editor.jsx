@@ -21,7 +21,9 @@ const Editor = ({
     editable,
     contentType: 'markdown',
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        trailingNode: false,
+      }),
       Markdown.configure({
         indentation: {
           style: 'space', // 'space' or 'tab'
@@ -34,6 +36,7 @@ const Editor = ({
     ],
 
     onUpdate: ({ editor }) => {
+      console.log(editor.getJSON());
       onChange?.(editor.getMarkdown());
     },
   });
