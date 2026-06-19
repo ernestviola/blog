@@ -7,6 +7,7 @@ import CommentItem from '@components/Comments/CommentItem';
 const Comments = () => {
   const { blogId } = useParams();
   const [comments, setComments] = useState([]);
+  const [isDirty, setIsDirty] = useState(true);
 
   useEffect(() => {
     async function fetchComments() {
@@ -25,17 +26,19 @@ const Comments = () => {
         setComments(data.comments ?? []);
       } catch (error) {
         console.log(error);
+      } finally {
+        setIsDirty(false);
       }
     }
 
     fetchComments();
-  }, [blogId]);
+  }, [blogId, isDirty]);
 
   return (
     <div>
       <hr />
       <h2>Comments</h2>
-      <CommentForm />
+      <CommentForm setIsDirty={setIsDirty} />
       <div className={styles.comments}>
         {comments.map((comment) => (
           <CommentItem data={comment} key={comment.id} />

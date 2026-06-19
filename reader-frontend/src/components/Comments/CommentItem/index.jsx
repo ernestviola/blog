@@ -2,10 +2,9 @@ import Editor from '@components/Editor';
 import styles from './commentItem.module.css';
 
 const CommentItem = ({ data }) => {
-  console.log(data);
   return (
-    <div>
-      <div>Username</div>
+    <div className={styles.container}>
+      <div>{data.username.username}: </div>
       <Editor color='white' editable={false} initialMarkdown={data.body} />
     </div>
   );

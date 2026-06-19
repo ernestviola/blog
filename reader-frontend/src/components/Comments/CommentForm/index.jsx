@@ -5,7 +5,7 @@ import styles from './commentForm.module.css';
 import { authFetch, getUsernameId, isLoggedIn } from '@utils/auth.js';
 import { useParams } from 'react-router';
 
-const CommentForm = () => {
+const CommentForm = ({ setIsDirty }) => {
   const { blogId } = useParams();
   const dialogRef = useRef();
   const [comment, setComment] = useState('');
@@ -36,14 +36,13 @@ const CommentForm = () => {
             }),
           },
         );
-        console.log(response);
         if (!response.ok) {
           throw new Error('Issues making a comment.');
         }
-
-        return;
       } catch (error) {
         console.log(error);
+      } finally {
+        setIsDirty(true);
       }
     } else if (getUsernameId()) {
       // useFetch with the usernameId
@@ -60,9 +59,9 @@ const CommentForm = () => {
     dialogRef.current.showModal();
   }
 
-  function hideDialog() {
-    dialogRef.current.close();
-  }
+  // function hideDialog() {
+  //   dialogRef.current.close();
+  // }
 
   return (
     <div className={styles.container}>
