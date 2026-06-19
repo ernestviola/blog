@@ -5,7 +5,12 @@ import { Placeholder } from '@tiptap/extensions';
 import styles from './editor.module.css';
 import './tiptapGlobals.css';
 
-const Editor = ({ editable = true, onChange, initialMarkdown = '' }) => {
+const Editor = ({
+  color = 'black',
+  editable = true,
+  onChange,
+  initialMarkdown = '',
+}) => {
   const editor = useEditor({
     content: initialMarkdown,
     editable,
@@ -30,7 +35,13 @@ const Editor = ({ editable = true, onChange, initialMarkdown = '' }) => {
 
   if (!editor) return null;
 
-  return <EditorContent className={styles.editor} editor={editor} />;
+  return (
+    <EditorContent
+      style={{ color }}
+      className={styles.editor}
+      editor={editor}
+    />
+  );
 };
 
 export default Editor;

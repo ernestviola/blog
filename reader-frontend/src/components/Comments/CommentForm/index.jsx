@@ -32,6 +32,7 @@ const CommentForm = () => {
             },
             body: JSON.stringify({
               body: comment,
+              usernameId: getUsernameId(),
             }),
           },
         );
