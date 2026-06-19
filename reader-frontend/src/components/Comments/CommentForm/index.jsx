@@ -5,7 +5,7 @@ import styles from './commentForm.module.css';
 import { authFetch, getUsernameId, isLoggedIn } from '@utils/auth.js';
 import { useParams } from 'react-router';
 
-const CommentForm = ({ setIsDirty }) => {
+const CommentForm = ({ setIsDirty, isDirty }) => {
   const { blogId } = useParams();
   const dialogRef = useRef();
   const [comment, setComment] = useState('');
@@ -66,7 +66,11 @@ const CommentForm = ({ setIsDirty }) => {
   return (
     <div className={styles.container}>
       <form className={styles.commentForm} onSubmit={(e) => handleComment(e)}>
-        <Editor onChange={setComment} />
+        <Editor
+          onChange={setComment}
+          isDirty={isDirty}
+          setIsDirty={setIsDirty}
+        />
         <button type='submit'>Submit</button>
       </form>
       <dialog ref={dialogRef}>

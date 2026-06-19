@@ -23,6 +23,7 @@ const Comments = () => {
         }
 
         const data = await response.json();
+        console.log(data.comments);
         setComments(data.comments ?? []);
       } catch (error) {
         console.log(error);
@@ -38,7 +39,7 @@ const Comments = () => {
     <div>
       <hr />
       <h2>Comments</h2>
-      <CommentForm setIsDirty={setIsDirty} />
+      <CommentForm setIsDirty={setIsDirty} isDirty={isDirty} />
       <div className={styles.comments}>
         {comments.map((comment) => (
           <CommentItem data={comment} key={comment.id} />

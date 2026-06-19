@@ -84,7 +84,7 @@ const View = () => {
         </div>
         <div className={styles.body}>
           <h1>{blog.title}</h1>
-          <Editor editable={false} initialMarkdown={blog.body} />
+          <Editor editable={false} initialMarkdown={blog.body} color='white' />
         </div>
         <div className={styles.footer}>
           <Comments />

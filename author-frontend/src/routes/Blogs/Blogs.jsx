@@ -99,7 +99,11 @@ const Home = () => {
               </p>
             </div>
 
-            <Link className={styles.editButton} to={`/blogs/${blog.id}/edit`}>
+            <Link
+              className={styles.editButton}
+              to={`/blogs/${blog.id}/edit`}
+              viewTransition
+            >
               <BiEdit className={styles.edit} />
             </Link>
           </li>

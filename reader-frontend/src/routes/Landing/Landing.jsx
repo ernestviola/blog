@@ -7,11 +7,11 @@ const Landing = () => {
     <div>
       <div className={styles.hero}>
         <span className={styles.title}>
-          <span className={styles.block}>Stories</span> worth telling
+          <span className={styles.block}>Stories</span> worth reading
         </span>
         <span className={styles.subtitle}>
           <Link viewTransition className={styles.link} to='/blogs'>
-            Start writing now <RightArrow />
+            Start reading now <RightArrow />
           </Link>
         </span>
       </div>
