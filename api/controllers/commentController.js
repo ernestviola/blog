@@ -17,6 +17,9 @@ commentController.getAll = async (req, res, next) => {
       where: {
         blogId,
       },
+      include: {
+        username: true,
+      },
     });
 
     return res.status(200).json({ comments });
