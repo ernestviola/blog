@@ -3,17 +3,22 @@ import { useState, useEffect } from 'react';
 import CommentForm from '@components/Comments/CommentForm';
 import styles from './comments.module.css';
 import CommentItem from '@components/Comments/CommentItem';
+import { useAuth } from '@contexts/AuthContext.jsx';
 
 const Comments = () => {
   const { blogId } = useParams();
   const [comments, setComments] = useState([]);
   const [isDirty, setIsDirty] = useState(true);
 
+  const { usernameId } = useAuth();
+
   useEffect(() => {
     async function fetchComments() {
       try {
+        const params = new URLSearchParams();
+        if (usernameId) params.set('usernameId', usernameId);
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/blogs/${blogId}/comments`,
+          `${import.meta.env.VITE_API_URL}/api/blogs/${blogId}/comments?${params}`,
           {
             method: 'GET',
           },
@@ -32,7 +37,13 @@ const Comments = () => {
     }
 
     fetchComments();
-  }, [blogId, isDirty]);
+  }, [blogId, isDirty, usernameId]);
+
+  const handleCommentUpdate = (updatedComment) => {
+    setComments((prev) =>
+      prev.map((c) => (c.id === updatedComment.id ? updatedComment : c)),
+    );
+  };
 
   return (
     <div>
@@ -41,7 +52,11 @@ const Comments = () => {
       <CommentForm setIsDirty={setIsDirty} isDirty={isDirty} />
       <div className={styles.comments}>
         {comments.map((comment) => (
-          <CommentItem data={comment} key={comment.id} />
+          <CommentItem
+            comment={comment}
+            key={comment.id}
+            onCommentUpdate={handleCommentUpdate}
+          />
         ))}
       </div>
     </div>

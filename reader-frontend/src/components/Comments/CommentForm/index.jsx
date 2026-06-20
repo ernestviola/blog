@@ -2,19 +2,22 @@ import { useRef, useState } from 'react';
 
 import Editor from '@components/Editor';
 import styles from './commentForm.module.css';
-import { authFetch, getUsernameId, isLoggedIn } from '@utils/auth.js';
+import { authFetch, isLoggedIn } from '@utils/auth.js';
 import { useParams } from 'react-router';
+import { useAuth } from '@contexts/AuthContext.jsx';
 
 const CommentForm = ({ setIsDirty, isDirty }) => {
   const { blogId } = useParams();
   const dialogRef = useRef();
   const [comment, setComment] = useState('');
 
+  const { usernameId } = useAuth();
+
   const handleComment = async (e) => {
     e.preventDefault();
 
     // check if user has some login credentials
-    if (!isLoggedIn() && !getUsernameId()) {
+    if (!isLoggedIn() && !usernameId) {
       showDialog();
       return;
     }
@@ -32,7 +35,7 @@ const CommentForm = ({ setIsDirty, isDirty }) => {
             },
             body: JSON.stringify({
               body: comment,
-              usernameId: getUsernameId(),
+              usernameId: usernameId,
             }),
           },
         );
@@ -44,7 +47,7 @@ const CommentForm = ({ setIsDirty, isDirty }) => {
       } finally {
         setIsDirty(true);
       }
-    } else if (getUsernameId()) {
+    } else if (usernameId) {
       // useFetch with the usernameId
     }
   };

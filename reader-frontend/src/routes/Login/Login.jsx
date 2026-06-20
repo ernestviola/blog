@@ -3,9 +3,12 @@ import styles from '../auth.module.css';
 import { Link, useNavigate } from 'react-router';
 import Toast from '@components/Toast';
 import { isLoggedIn, setUserFields } from '@utils/auth.js';
+import { useAuth } from '@contexts/AuthContext.jsx';
 
 const Login = () => {
   const navigate = useNavigate();
+
+  const { refreshAuth } = useAuth();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -53,6 +56,7 @@ const Login = () => {
       if (response.ok) {
         const data = await response.json();
         setUserFields(data);
+        refreshAuth();
       } else if (response.status === 401) {
         const data = await response.json();
         const errorObj = [

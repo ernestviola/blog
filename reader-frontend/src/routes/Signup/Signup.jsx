@@ -3,6 +3,7 @@ import styles from '../auth.module.css';
 import { Link, useNavigate } from 'react-router';
 import Toast from '@components/Toast';
 import { isLoggedIn, setUserFields } from '@utils/auth.js';
+import { useAuth } from '@contexts/AuthContext.jsx';
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -13,6 +14,8 @@ const Signup = () => {
   const [fieldErrors, setFieldErrors] = useState({});
   const [errorObjects, setErrorObjects] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const { refreshAuth } = useAuth();
 
   useEffect(() => {
     document.title = 'Sign up';
@@ -56,6 +59,7 @@ const Signup = () => {
       if (response.ok) {
         const data = await response.json();
         setUserFields(data);
+        refreshAuth();
       } else if (response.status === 400 || response.status === 409) {
         const data = await response.json();
         const errorObj = Object.values(data.fieldErrors).map((error) => {
