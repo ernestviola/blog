@@ -34,9 +34,20 @@ const CommentItem = ({ comment, onCommentUpdate }) => {
       console.log(error);
     }
   };
+
   return (
     <div className={styles.container}>
-      <div className={styles.username}>@{comment.username.username}: </div>
+      <div className={styles.header}>
+        <div className={styles.username}>@{comment.username.username} </div>
+        <span>
+          {new Date(comment.added).toLocaleDateString('en-US', {
+            weekday: 'short',
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric',
+          })}
+        </span>
+      </div>
       <div className={styles.commentContainer}>
         <Editor color='white' editable={false} initialMarkdown={comment.body} />
       </div>

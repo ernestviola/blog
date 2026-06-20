@@ -11,6 +11,12 @@
   padding: 1rem;
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
 .username {
   background-color: white;
   color: black;
