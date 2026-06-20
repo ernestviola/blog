@@ -64,9 +64,9 @@ const CommentForm = ({ setIsDirty, isDirty }) => {
     dialogRef.current.showModal();
   }
 
-  // function hideDialog() {
-  //   dialogRef.current.close();
-  // }
+  function hideDialog() {
+    dialogRef.current.close();
+  }
 
   return (
     <div className={styles.container}>
@@ -109,7 +109,10 @@ const CommentForm = ({ setIsDirty, isDirty }) => {
             aria-label='username'
           />
           <div className={styles.dialogButtons}>
-            <button className={`${styles.button} ${styles.cancel}`}>
+            <button
+              onClick={hideDialog}
+              className={`${styles.button} ${styles.cancel}`}
+            >
               Cancel
             </button>
             <button
