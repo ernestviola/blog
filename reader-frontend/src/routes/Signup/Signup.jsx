@@ -73,6 +73,7 @@ const Signup = () => {
         setErrorObjects(errorObj);
       } else {
         // 500 error
+        throw new Error('Issues creating the username. Try again.');
       }
     } catch (error) {
       console.error(error);

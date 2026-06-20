@@ -1,3 +1,15 @@
+.toasts {
+  position: fixed;
+  top: 0;
+  right: 50%;
+  transform: translateX(50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  color: white;
+}
+
 .editor {
   padding: 1rem 2rem;
 }
