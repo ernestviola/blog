@@ -15,6 +15,10 @@ const Editor = ({
   setIsDirty = () => {
     return;
   },
+  focus = false,
+  setFocus = () => {
+    return;
+  },
 }) => {
   const editor = useEditor({
     content: initialMarkdown,
@@ -36,7 +40,6 @@ const Editor = ({
     ],
 
     onUpdate: ({ editor }) => {
-      console.log(editor.getJSON());
       onChange?.(editor.getMarkdown());
     },
   });
@@ -50,6 +53,15 @@ const Editor = ({
 
     clearEditor();
   }, [editor, isDirty, setIsDirty, editable]);
+
+  useEffect(() => {
+    if (focus === false) return;
+    const handleFocus = () => {
+      editor.commands.focus('end');
+      setFocus(false);
+    };
+    handleFocus();
+  }, [focus, editor, setFocus]);
 
   if (!editor) return null;
 

@@ -10,6 +10,7 @@ const CommentForm = ({ setIsDirty, isDirty }) => {
   const { blogId } = useParams();
   const dialogRef = useRef();
   const [comment, setComment] = useState('');
+  const [focus, setFocus] = useState(false);
 
   const { usernameId } = useAuth();
 
@@ -68,13 +69,19 @@ const CommentForm = ({ setIsDirty, isDirty }) => {
 
   return (
     <div className={styles.container}>
-      <form className={styles.commentForm} onSubmit={(e) => handleComment(e)}>
+      <form
+        className={styles.commentForm}
+        onSubmit={(e) => handleComment(e)}
+        onClick={() => setFocus(true)}
+      >
         <div className={styles.editor}>
           <Editor
             onChange={setComment}
             isDirty={isDirty}
             setIsDirty={setIsDirty}
             color='white'
+            focus={focus}
+            setFocus={setFocus}
           />
         </div>
         <button type='submit'>Submit</button>

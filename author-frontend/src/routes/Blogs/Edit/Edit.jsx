@@ -14,8 +14,10 @@ const Edit = () => {
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(false);
   const [toasts, setToasts] = useState([]);
+  const [focus, setFocus] = useState(false);
 
   const dialogRef = useRef(null);
+  const titleRef = useRef(null);
   const openDialog = () => {
     dialogRef.current.showModal();
     dialogRef.current.focus();
@@ -42,6 +44,9 @@ const Edit = () => {
 
         const data = await response.json();
         setBlog(data.blog);
+        if (data.blog.title) {
+          setFocus(true);
+        }
       } catch (error) {
         console.log(error);
         navigate('/login');
@@ -189,6 +194,7 @@ const Edit = () => {
         </div>
         <div className={styles.body}>
           <input
+            autoFocus
             className={styles.titleInput}
             onChange={(e) => {
               isDirty.current = true;
@@ -197,13 +203,20 @@ const Edit = () => {
             value={blog.title}
             placeholder='Untitled'
           />
-          <Editor
-            onChange={(value) => {
-              isDirty.current = true;
-              setBlog((prev) => ({ ...prev, body: value }));
-            }}
-            initialMarkdown={blog.body}
-          />
+          <div
+            className={styles.editorContainer}
+            onClick={() => setFocus(true)}
+          >
+            <Editor
+              onChange={(value) => {
+                isDirty.current = true;
+                setBlog((prev) => ({ ...prev, body: value }));
+              }}
+              focus={focus}
+              setFocus={setFocus}
+              initialMarkdown={blog.body}
+            />
+          </div>
         </div>
         <div className={styles.footer}>
           <div className={styles.footerButtons}>
