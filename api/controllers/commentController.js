@@ -19,7 +19,11 @@ commentController.getAll = async (req, res, next) => {
       },
       include: {
         username: true,
+        _count: {
+          select: { commentLikes: true },
+        },
       },
+      orderBy: [{ commentLikes: { _count: 'desc' } }, { added: 'asc' }],
     });
 
     return res.status(200).json({ comments });
@@ -105,17 +109,38 @@ commentController.delete = async (req, res, next) => {
   }
 };
 
+// model commentLike {
+//   id         String   @id @default(uuid())
+//   comment    comment  @relation(fields: [commentId], references: [id])
+//   commentId  String
+//   username   username @relation(fields: [usernameId], references: [id])
+//   usernameId String
+//   added      DateTime @default(now())
+
+//   @@unique([commentId, usernameId])
+// }
+
 commentController.like = async (req, res, next) => {
-  const { blogId, commentId } = req.params;
+  const { commentId, usernameId } = req.params;
   try {
-    const comment = await prisma.comment.update({
-      where: {
-        id: commentId,
+    const commentLike = await prisma.commentLike.create({
+      data: {
+        commentId: commentId,
+        usernameId: usernameId,
       },
-      data: { likes: { increment: 1 } },
     });
 
-    return res.status(200).json({ success: true, likes: comment.likes });
+    const commentLikes = await prisma.commentLike.findMany({
+      where: {
+        commentId: commentId,
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      commentId: commentId,
+      likes: commentLikes.length,
+    });
   } catch (error) {
     next(error);
   }
