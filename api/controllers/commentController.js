@@ -13,6 +13,7 @@ const putcommentValidation = [body('body').trim().notEmpty().optional()];
 commentController.getAll = async (req, res, next) => {
   try {
     const { blogId } = req.params;
+    const { usernameId } = req.query;
     const comments = await prisma.comment.findMany({
       where: {
         blogId,
@@ -22,11 +23,21 @@ commentController.getAll = async (req, res, next) => {
         _count: {
           select: { commentLikes: true },
         },
+        commentLikes: usernameId
+          ? {
+              where: { usernameId },
+            }
+          : false,
       },
       orderBy: [{ commentLikes: { _count: 'desc' } }, { added: 'asc' }],
     });
 
-    return res.status(200).json({ comments });
+    const shaped = comments.map(({ commentLikes, ...rest }) => ({
+      ...rest,
+      likedByUser: commentLikes.length > 0,
+    }));
+
+    return res.status(200).json({ comments: shaped });
   } catch (error) {
     next(error);
   }
@@ -109,37 +120,54 @@ commentController.delete = async (req, res, next) => {
   }
 };
 
-// model commentLike {
-//   id         String   @id @default(uuid())
-//   comment    comment  @relation(fields: [commentId], references: [id])
-//   commentId  String
-//   username   username @relation(fields: [usernameId], references: [id])
-//   usernameId String
-//   added      DateTime @default(now())
-
-//   @@unique([commentId, usernameId])
-// }
-
 commentController.like = async (req, res, next) => {
-  const { commentId, usernameId } = req.params;
+  const { commentId } = req.params;
+  const { usernameId } = req.body;
   try {
-    const commentLike = await prisma.commentLike.create({
-      data: {
+    // if contains then delete
+    const commentLike = await prisma.commentLike.findFirst({
+      where: {
         commentId: commentId,
         usernameId: usernameId,
       },
     });
+    if (commentLike) {
+      await prisma.commentLike.delete({
+        where: {
+          id: commentLike.id,
+        },
+      });
+    } else {
+      await prisma.commentLike.create({
+        data: {
+          commentId: commentId,
+          usernameId: usernameId,
+        },
+      });
+    }
 
-    const commentLikes = await prisma.commentLike.findMany({
+    const comment = await prisma.comment.findFirst({
       where: {
-        commentId: commentId,
+        id: commentId,
       },
+      include: {
+        username: true,
+        _count: {
+          select: { commentLikes: true },
+        },
+        commentLikes: {
+          where: { usernameId },
+        },
+      },
+      orderBy: [{ commentLikes: { _count: 'desc' } }, { added: 'asc' }],
     });
+
+    comment.likedByUser = comment.commentLikes.length > 0;
+    delete comment.commentLikes;
 
     return res.status(200).json({
       success: true,
-      commentId: commentId,
-      likes: commentLikes.length,
+      comment,
     });
   } catch (error) {
     next(error);
