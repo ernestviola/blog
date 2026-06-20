@@ -34,7 +34,7 @@ commentController.getAll = async (req, res, next) => {
 
     const shaped = comments.map(({ commentLikes, ...rest }) => ({
       ...rest,
-      likedByUser: commentLikes.length > 0,
+      likedByUser: commentLikes?.length > 0,
     }));
 
     return res.status(200).json({ comments: shaped });
@@ -162,7 +162,7 @@ commentController.like = async (req, res, next) => {
       orderBy: [{ commentLikes: { _count: 'desc' } }, { added: 'asc' }],
     });
 
-    comment.likedByUser = comment.commentLikes.length > 0;
+    comment.likedByUser = comment.commentLikes?.length > 0;
     delete comment.commentLikes;
 
     return res.status(200).json({
