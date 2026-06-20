@@ -5,9 +5,35 @@
 .commentForm {
   border-radius: 1rem;
   background-color: rgb(30, 30, 30);
-  min-height: 200px;
+  min-height: 150px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   cursor: text;
+}
+
+.commentButton {
+  flex-grow: 0;
+  align-self: flex-end;
+  margin: 1rem 2rem;
+}
+
+.button {
+  padding: 10px 15px;
+  border: 2px solid black;
+  border-radius: 9999px;
+}
+
+.button {
+  background-color: var(--accent);
+  transition: background-color 0.2s ease-out;
+}
+
+.button:disabled {
+  cursor: auto;
+}
+
+.button:not(:disabled):hover,
+.button:not(:disabled):focus {
+  background-color: var(--accent-hover);
 }

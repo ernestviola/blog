@@ -48,7 +48,7 @@ const Comments = () => {
   return (
     <div>
       <hr />
-      <h2>Comments</h2>
+      <h2 className={styles.title}>Comments</h2>
       <CommentForm setIsDirty={setIsDirty} isDirty={isDirty} />
       <div className={styles.comments}>
         {comments.map((comment) => (

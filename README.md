@@ -13,15 +13,9 @@ This project is ran on 3 different servers.
 
   - stored in local storage with their usernameId
 
-- Fix up CommentItems with styling
-
-- Clear comment after submitted
-
-- Style CommentForm
-
 - a way so that users can signup with that username that they setup
 
-- Blogs should only show published on the reader site
+- Like button for the blog. Also views count
 
 - Ordering for Blogs
   - Pagination

@@ -17,6 +17,7 @@ const CommentForm = ({ setIsDirty, isDirty }) => {
   const handleComment = async (e) => {
     e.preventDefault();
 
+    if (comment.trim() === '') return;
     // check if user has some login credentials
     if (!isLoggedIn() && !usernameId) {
       showDialog();
@@ -35,7 +36,7 @@ const CommentForm = ({ setIsDirty, isDirty }) => {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              body: comment,
+              body: comment.trim(),
               usernameId: usernameId,
             }),
           },
@@ -84,7 +85,13 @@ const CommentForm = ({ setIsDirty, isDirty }) => {
             setFocus={setFocus}
           />
         </div>
-        <button type='submit'>Submit</button>
+        <button
+          type='submit'
+          className={`${styles.commentButton} ${styles.button}`}
+          disabled={comment.trim() === ''}
+        >
+          Comment
+        </button>
       </form>
       <dialog ref={dialogRef}>
         <form onSubmit={(e) => handleUsernameSubmit(e)}>

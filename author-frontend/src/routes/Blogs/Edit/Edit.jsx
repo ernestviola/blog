@@ -17,7 +17,6 @@ const Edit = () => {
   const [focus, setFocus] = useState(false);
 
   const dialogRef = useRef(null);
-  const titleRef = useRef(null);
   const openDialog = () => {
     dialogRef.current.showModal();
     dialogRef.current.focus();
