@@ -1,0 +1,21 @@
+.container {
+  border-bottom: 1px solid white;
+  padding: 3rem;
+}
+
+.container:last-child {
+  border-bottom: none;
+}
+
+.commentContainer {
+  padding: 1rem;
+}
+
+.username {
+  background-color: white;
+  color: black;
+  display: inline;
+  padding: 0.5rem 0.8rem;
+  border-radius: 9999px;
+  box-shadow: 0 2px 6px rgba(255, 255, 255, 0.8);
+}

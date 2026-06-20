@@ -49,7 +49,7 @@ const Editor = ({
     }
 
     clearEditor();
-  }, [editor, isDirty, setIsDirty]);
+  }, [editor, isDirty, setIsDirty, editable]);
 
   if (!editor) return null;
 
