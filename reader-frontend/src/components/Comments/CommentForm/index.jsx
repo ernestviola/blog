@@ -93,14 +93,32 @@ const CommentForm = ({ setIsDirty, isDirty }) => {
           Comment
         </button>
       </form>
-      <dialog ref={dialogRef}>
+      <dialog ref={dialogRef} className={styles.dialog}>
         <form onSubmit={(e) => handleUsernameSubmit(e)}>
-          <h2>
-            Create a username in order to leave a comment. Sign up with that
-            username to keep your username!
-          </h2>
-          <input type='text' placeholder='username' aria-label='username' />
-          <button>Submit</button>
+          <div>
+            <h2>Create a username!</h2>
+            <ol>
+              <li>Create a username in order to leave a comment.</li>{' '}
+              <li>Sign up with that username to keep your username!</li>
+            </ol>
+          </div>
+          <input
+            className={styles.input}
+            type='text'
+            placeholder='username'
+            aria-label='username'
+          />
+          <div className={styles.dialogButtons}>
+            <button className={`${styles.button} ${styles.cancel}`}>
+              Cancel
+            </button>
+            <button
+              type='submit'
+              className={`${styles.button} ${styles.submit}`}
+            >
+              Submit
+            </button>
+          </div>
         </form>
       </dialog>
     </div>
