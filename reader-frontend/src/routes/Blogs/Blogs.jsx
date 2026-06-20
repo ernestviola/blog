@@ -24,7 +24,7 @@ const Home = () => {
         const params = new URLSearchParams();
         if (title) params.set('title', title);
 
-        const response = await authFetch(
+        const response = await fetch(
           `${import.meta.env.VITE_API_URL}/api/blogs?${params.toString()}`,
           {
             method: 'GET',

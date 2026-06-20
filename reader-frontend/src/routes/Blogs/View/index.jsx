@@ -1,7 +1,6 @@
 import Editor from '@components/Editor';
 import { useState, useEffect, useCallback } from 'react';
 import styles from './view.module.css';
-import { authFetch } from '@utils/auth.js';
 import { useNavigate, useParams } from 'react-router';
 import Loading from '@components/Loading';
 import Toast from '@components/Toast';

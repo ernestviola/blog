@@ -69,11 +69,14 @@ const CommentForm = ({ setIsDirty, isDirty }) => {
   return (
     <div className={styles.container}>
       <form className={styles.commentForm} onSubmit={(e) => handleComment(e)}>
-        <Editor
-          onChange={setComment}
-          isDirty={isDirty}
-          setIsDirty={setIsDirty}
-        />
+        <div className={styles.editor}>
+          <Editor
+            onChange={setComment}
+            isDirty={isDirty}
+            setIsDirty={setIsDirty}
+            color='white'
+          />
+        </div>
         <button type='submit'>Submit</button>
       </form>
       <dialog ref={dialogRef}>
