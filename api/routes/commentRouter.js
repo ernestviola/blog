@@ -6,8 +6,12 @@ const commentRouter = Router({ mergeParams: true });
 
 commentRouter.get('/', commentController.getAll);
 commentRouter.post('/', authJWTUsernameOnly, commentController.post);
-commentRouter.put('/:commentId', authJWT, commentController.put);
-commentRouter.delete('/:commentId', authJWT, commentController.delete);
+commentRouter.put('/:commentId', authJWTUsernameOnly, commentController.put);
+commentRouter.delete(
+  '/:commentId',
+  authJWTUsernameOnly,
+  commentController.delete,
+);
 commentRouter.post(
   '/:commentId/like',
   authJWTUsernameOnly,
