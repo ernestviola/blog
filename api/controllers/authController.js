@@ -37,6 +37,14 @@ const loginValidation = [
   body('password').notEmpty(),
 ];
 
+const usernameValidation = [
+  body('username')
+    .trim()
+    .notEmpty()
+    .isLength({ min: 1, max: 100 })
+    .withMessage('Must choose a username between 1 and 100 characters long.'),
+];
+
 const authController = {};
 
 /**
@@ -198,6 +206,63 @@ authController.login = [
 
       return res.status(200).json({ token });
     } catch (error) {
+      next(error);
+    }
+  },
+];
+
+authController.createUsername = [
+  usernameValidation,
+  async (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      const fieldErrors = {};
+      errors.array().forEach((error) => {
+        fieldErrors[error.path] = error.msg;
+      });
+      return res.status(400).json({ fieldErrors });
+    }
+    const { username } = matchedData(req);
+
+    try {
+      const user = await prisma.username.create({
+        data: {
+          username: username,
+        },
+        select: {
+          username: true,
+          id: true,
+        },
+      });
+
+      // return Authorization
+      const token = jwt.sign(
+        {
+          username: user.username,
+          usernameId: user.id,
+        },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: '2 days',
+        },
+      );
+
+      return res.status(201).json({ token });
+    } catch (error) {
+      if (error.code === 'P2002') {
+        const usernameInUse = await prisma.username.findFirst({
+          where: { username },
+        });
+
+        const fieldErrors = {};
+
+        if (usernameInUse) {
+          fieldErrors['username'] = 'Username is already in use.';
+        }
+        return res.status(409).json({ fieldErrors });
+      }
+
       next(error);
     }
   },
