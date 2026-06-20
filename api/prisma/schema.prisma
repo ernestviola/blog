@@ -25,15 +25,15 @@ model blog {
 }
 
 model comment {
-  id         String   @id @default(uuid())
-  body       String
-  likes      Int      @default(0)
-  blog       blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
-  blogId     String
-  added      DateTime @default(now())
-  updated    DateTime @updatedAt
-  username   username @relation(fields: [usernameId], references: [id])
-  usernameId String
+  id           String        @id @default(uuid())
+  body         String
+  blog         blog          @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  blogId       String
+  added        DateTime      @default(now())
+  updated      DateTime      @updatedAt
+  username     username      @relation(fields: [usernameId], references: [id])
+  usernameId   String
+  commentLikes commentLike[]
 }
 
 model user {
@@ -48,8 +48,20 @@ model user {
 }
 
 model username {
-  id       String    @id @default(uuid())
-  username String    @unique
-  comments comment[]
-  user     user?
+  id           String        @id @default(uuid())
+  username     String        @unique
+  comments     comment[]
+  user         user?
+  commentLikes commentLike[]
+}
+
+model commentLike {
+  id         String   @id @default(uuid())
+  comment    comment  @relation(fields: [commentId], references: [id])
+  commentId  String
+  username   username @relation(fields: [usernameId], references: [id])
+  usernameId String
+  added      DateTime @default(now())
+
+  @@unique([commentId, usernameId])
 }
