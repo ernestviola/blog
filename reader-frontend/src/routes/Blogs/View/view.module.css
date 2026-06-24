@@ -34,6 +34,19 @@
   color: #adb5bd;
 }
 
+.stats {
+  display: flex;
+}
+
+.blogStat {
+  color: white;
+  border: none;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  font-size: 2rem;
+}
+
 .body {
   flex-grow: 1;
 }

@@ -6,6 +6,8 @@ import Loading from '@components/Loading';
 import Toast from '@components/Toast';
 import BackButton from '@components/BackButton';
 import Comments from '@components/Comments';
+import { BiHeart } from 'react-icons/bi';
+import { BsEye } from 'react-icons/bs';
 
 const View = () => {
   const navigate = useNavigate();
@@ -83,6 +85,16 @@ const View = () => {
         </div>
         <div className={styles.body}>
           <h1>{blog.title}</h1>
+          <div className={styles.stats}>
+            <button className={styles.blogStat} title='like'>
+              <BiHeart className={styles.heart} />
+              <span>{blog.likes}</span>
+            </button>
+            <div className={styles.blogStat} title='views'>
+              <BsEye className={styles.eye} />
+              <span>{blog.views}</span>
+            </div>
+          </div>
           <Editor editable={false} initialMarkdown={blog.body} color='white' />
         </div>
         <div className={styles.footer}>
