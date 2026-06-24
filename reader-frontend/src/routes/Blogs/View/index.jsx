@@ -85,17 +85,18 @@ const View = () => {
         </div>
         <div className={styles.body}>
           <h1>{blog.title}</h1>
-          <div className={styles.stats}>
-            <button className={styles.blogStat} title='like'>
-              <BiHeart className={styles.heart} />
-              <span>{blog.likes}</span>
-            </button>
-            <div className={styles.blogStat} title='views'>
-              <BsEye className={styles.eye} />
-              <span>{blog.views}</span>
-            </div>
-          </div>
+
           <Editor editable={false} initialMarkdown={blog.body} color='white' />
+        </div>
+        <div className={styles.stats}>
+          <button className={styles.blogStat} title='like'>
+            <BiHeart className={styles.heart} />
+            <span>{blog.likes}</span>
+          </button>
+          <div className={styles.blogStat} title='views'>
+            <BsEye className={styles.eye} />
+            <span>{blog.views}</span>
+          </div>
         </div>
         <div className={styles.footer}>
           <Comments />
