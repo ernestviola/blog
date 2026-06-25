@@ -26,34 +26,28 @@ const CommentForm = ({ setIsDirty, isDirty }) => {
       showDialog();
       return;
     }
-
-    // comment section
-    if (isLoggedIn()) {
-      // useAuthFetch to send
-      try {
-        const response = await authFetch(
-          `${import.meta.env.VITE_API_URL}/api/blogs/${blogId}/comments`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              body: comment.trim(),
-              usernameId: usernameId,
-            }),
+    // useAuthFetch to send
+    try {
+      const response = await authFetch(
+        `${import.meta.env.VITE_API_URL}/api/blogs/${blogId}/comments`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
           },
-        );
-        if (!response.ok) {
-          throw new Error('Issues making a comment.');
-        }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setIsDirty(true);
+          body: JSON.stringify({
+            body: comment.trim(),
+            usernameId: usernameId,
+          }),
+        },
+      );
+      if (!response.ok) {
+        throw new Error('Issues making a comment.');
       }
-    } else if (usernameId) {
-      // useFetch with the usernameId
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsDirty(true);
     }
   };
 
@@ -74,6 +68,7 @@ const CommentForm = ({ setIsDirty, isDirty }) => {
         const data = await response.json();
         setUserFields(data);
         refreshAuth();
+        hideDialog();
       } else if (response.status === 400 || response.status === 409) {
         const data = await response.json();
 
