@@ -2,7 +2,12 @@ import { useRef, useState, useCallback } from 'react';
 
 import Editor from '@components/Editor';
 import styles from './commentForm.module.css';
-import { authFetch, isLoggedIn, setUserFields } from '@utils/auth.js';
+import {
+  authFetch,
+  getUsernameId,
+  isLoggedIn,
+  setUserFields,
+} from '@utils/auth.js';
 import { useParams } from 'react-router';
 import { useAuth } from '@contexts/AuthContext.jsx';
 import Toast from '@components/Toast';
@@ -22,7 +27,7 @@ const CommentForm = ({ setIsDirty, isDirty }) => {
 
     if (comment.trim() === '') return;
     // check if user has some login credentials
-    if (!isLoggedIn() && !usernameId) {
+    if (usernameId === null) {
       showDialog();
       return;
     }
