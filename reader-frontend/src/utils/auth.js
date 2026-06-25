@@ -10,16 +10,27 @@ export const isLoggedIn = () => {
 };
 
 export const getUsernameId = () => {
-  const usernameId = localStorage.getItem('usernameId');
-  if (!usernameId) return null;
-  else return usernameId;
+  const token = localStorage.getItem('token');
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    if (payload.exp * 1000 < Date.now()) {
+      // is expired return null
+      localStorage.removeItem('token');
+    } else {
+      const usernameId = localStorage.setItem(
+        'usernameId',
+        payload?.usernameId,
+      );
+      return usernameId;
+    }
+  } catch {
+    return null;
+  }
 };
 
 export const setUserFields = (data) => {
   localStorage.setItem('token', data.token);
-  const payload = JSON.parse(atob(data.token.split('.')[1]));
-  localStorage.setItem('username', payload?.username);
-  localStorage.setItem('usernameId', payload?.usernameId);
 };
 
 export const getAuthHeader = () => {
@@ -33,8 +44,6 @@ export const getAuthHeader = () => {
 
 export const logout = () => {
   localStorage.removeItem('token');
-  localStorage.removeItem('username');
-  localStorage.removeItem('usernameId');
 };
 
 export const authFetch = async (url, options = {}, navigate) => {
