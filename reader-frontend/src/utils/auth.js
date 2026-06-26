@@ -18,11 +18,7 @@ export const getUsernameId = () => {
       // is expired return null
       localStorage.removeItem('token');
     } else {
-      const usernameId = localStorage.setItem(
-        'usernameId',
-        payload?.usernameId,
-      );
-      return usernameId;
+      return payload?.usernameId;
     }
   } catch {
     return null;

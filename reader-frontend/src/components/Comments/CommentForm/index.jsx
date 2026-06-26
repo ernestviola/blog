@@ -165,8 +165,9 @@ const CommentForm = ({ setIsDirty, isDirty }) => {
           />
           <div className={styles.dialogButtons}>
             <button
-              onClick={hideDialog}
+              onClick={() => hideDialog()}
               className={`${styles.button} ${styles.cancel}`}
+              type='button'
             >
               Cancel
             </button>
