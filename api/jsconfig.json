@@ -3,5 +3,5 @@
     "module": "ESNext",
     "moduleResolution": "bundler"
   },
-  "include": ["routes", "controllers", "libs"]
+  "include": ["routes", "controllers", "libs", "generated"]
 }

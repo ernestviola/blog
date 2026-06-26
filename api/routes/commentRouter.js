@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import commentController from '../controllers/commentController.js';
 import { authJWT, authJWTUsernameOnly } from '../libs/passport.js';
+import commentLikeController from '../controllers/commentLikeController.js';
 
 const commentRouter = Router({ mergeParams: true });
 
@@ -15,7 +16,12 @@ commentRouter.delete(
 commentRouter.post(
   '/:commentId/like',
   authJWTUsernameOnly,
-  commentController.like,
+  commentLikeController.post,
+);
+commentRouter.delete(
+  '/:commentId/like',
+  authJWTUsernameOnly,
+  commentLikeController.delete,
 );
 
 export default commentRouter;

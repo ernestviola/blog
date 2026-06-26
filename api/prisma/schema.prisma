@@ -11,17 +11,17 @@ datasource db {
 }
 
 model blog {
-  id        String    @id @default(uuid())
+  id        String     @id @default(uuid())
   title     String?
   body      String?
-  views     Int       @default(0)
-  likes     Int       @default(0)
-  published Boolean   @default(false)
+  views     Int        @default(0)
+  published Boolean    @default(false)
   comments  comment[]
-  user      user      @relation(fields: [userId], references: [id])
+  user      user       @relation(fields: [userId], references: [id])
   userId    String
-  added     DateTime  @default(now())
-  updated   DateTime  @updatedAt
+  added     DateTime   @default(now())
+  updated   DateTime   @updatedAt
+  blogLikes blogLike[]
 }
 
 model comment {
@@ -53,6 +53,7 @@ model username {
   comments     comment[]
   user         user?
   commentLikes commentLike[]
+  blogLikes    blogLike[]
 }
 
 model commentLike {
@@ -64,4 +65,15 @@ model commentLike {
   added      DateTime @default(now())
 
   @@unique([commentId, usernameId])
+}
+
+model blogLike {
+  id         String   @id @default(uuid())
+  blog       blog     @relation(fields: [blogId], references: [id])
+  blogId     String
+  username   username @relation(fields: [usernameId], references: [id])
+  usernameId String
+  added      DateTime @default(now())
+
+  @@unique([blogId, usernameId])
 }

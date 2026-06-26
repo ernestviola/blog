@@ -196,20 +196,4 @@ blogController.delete = async (req, res, next) => {
   }
 };
 
-blogController.like = async (req, res, next) => {
-  const { id } = req.params;
-  try {
-    const blog = await prisma.blog.update({
-      where: {
-        id: id,
-      },
-      data: { likes: { increment: 1 } },
-    });
-
-    return res.status(200).json({ success: true, likes: blog.likes });
-  } catch (error) {
-    next(error);
-  }
-};
-
 export default blogController;
