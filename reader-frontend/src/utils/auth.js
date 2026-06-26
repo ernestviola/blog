@@ -1,3 +1,10 @@
+const isTokenExpired = () => {
+  const token = localStorage.getItem('token');
+  if (!token) return true;
+  const payload = JSON.parse(atob(token.split('.')[1]));
+  return payload.exp * 1000 < Date.now();
+};
+
 export const isLoggedIn = () => {
   const token = localStorage.getItem('token');
   if (!token) return false;
@@ -14,11 +21,11 @@ export const getUsernameId = () => {
   if (!token) return null;
   try {
     const payload = JSON.parse(atob(token.split('.')[1]));
-    if (payload.exp * 1000 < Date.now()) {
-      // is expired return null
+    if (isTokenExpired()) {
+      // remove token since expired
       localStorage.removeItem('token');
     } else {
-      return payload?.usernameId;
+      return payload.usernameId;
     }
   } catch {
     return null;
@@ -30,12 +37,9 @@ export const setUserFields = (data) => {
 };
 
 export const getAuthHeader = () => {
-  if (isLoggedIn()) {
-    return {
-      Authorization: `Bearer ${localStorage.getItem('token')}`,
-    };
-  }
-  return {};
+  return {
+    Authorization: `Bearer ${localStorage.getItem('token')}`,
+  };
 };
 
 export const logout = () => {
@@ -53,9 +57,6 @@ export const authFetch = async (url, options = {}, navigate) => {
 
   if (response.status === 401) {
     localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    localStorage.removeItem('usernameId');
-    navigate('/login', { viewTransition: true });
     return;
   }
 
