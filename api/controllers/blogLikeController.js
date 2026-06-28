@@ -5,13 +5,15 @@ const blogLikeController = {};
 blogLikeController.post = async (req, res, next) => {
   // get the blogId
   const { blogId } = req.params;
-  const { usernameId } = req.user.id;
+  const { id } = req.user;
+
+  console.log(req.user);
 
   try {
     await prisma.blogLike.create({
       data: {
         blogId,
-        usernameId,
+        usernameId: id,
       },
     });
 
@@ -31,13 +33,13 @@ blogLikeController.post = async (req, res, next) => {
 
 blogLikeController.delete = async (req, res, next) => {
   const { blogId } = req.params;
-  const { usernameId } = req.user.id;
+  const { id } = req.user;
 
   try {
     await prisma.blogLike.delete({
       where: {
         blogId,
-        usernameId,
+        usernameId: id,
       },
     });
 

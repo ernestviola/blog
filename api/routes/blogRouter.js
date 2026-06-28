@@ -16,8 +16,12 @@ blogRouter.post('/', authJWT, blogController.post);
 blogRouter.put('/:id', authJWT, blogController.put);
 blogRouter.delete('/:id', authJWT, blogController.delete);
 
-blogRouter.post('/:id/like', authJWTUsernameOnly, blogLikeController.post);
-blogRouter.delete('/:id/like', authJWTUsernameOnly, blogLikeController.delete);
+blogRouter.post('/:blogId/like', authJWTUsernameOnly, blogLikeController.post);
+blogRouter.delete(
+  '/:blogId/like',
+  authJWTUsernameOnly,
+  blogLikeController.delete,
+);
 
 blogRouter.use('/:blogId/comments', commentRouter);
 

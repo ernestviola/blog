@@ -73,41 +73,46 @@ blogController.getAll = [
     }
   },
 ];
+
 blogController.getSingle = async (req, res, next) => {
   const { id } = req.params;
   try {
     let blog;
-    if (req.user) {
-      blog = await prisma.blog.update({
-        where: {
+    const where = req.user
+      ? {
           id: id,
           OR: [{ published: true }, { userId: req.user.id }],
-        },
-        include: {
-          user: {
-            select: { username: { select: { username: true } } },
-          },
-        },
-        data: {
-          views: { increment: 1 },
-        },
-      });
-    } else {
-      blog = await prisma.blog.update({
-        where: {
+        }
+      : {
           id: id,
           published: true,
-        },
-        include: {
+        };
+
+    const include = req.user
+      ? {
           user: {
             select: { username: { select: { username: true } } },
           },
-        },
-        data: {
-          views: { increment: 1 },
-        },
-      });
-    }
+          _count: { select: { blogLikes: true } },
+          blogLikes: { where: { usernameId: req.usernameId } },
+        }
+      : {
+          user: {
+            select: { username: { select: { username: true } } },
+          },
+          _count: { select: { blogLikes: true } },
+        };
+
+    blog = await prisma.blog.update({
+      where,
+      include,
+      data: {
+        views: { increment: 1 },
+      },
+    });
+
+    blog.likedByUser = blog.blogLikes?.length > 0;
+    delete blog.blogLikes;
 
     if (!blog) {
       return res.status(404).json({ message: 'Not found.' });
