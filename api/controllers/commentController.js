@@ -104,7 +104,7 @@ commentController.put = [
 
 commentController.delete = async (req, res, next) => {
   try {
-    const { blogId, commentId } = req.params;
+    const { commentId } = req.params;
     const comment = await prisma.comment.delete({
       where: {
         id: commentId,

@@ -34,6 +34,7 @@ passport.use(
           id: payload.usernameId,
         },
       });
+      user.usernameId = user.id;
 
       if (user) return done(null, user);
       return done(null, false);
