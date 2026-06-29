@@ -94,7 +94,7 @@ blogController.getSingle = async (req, res, next) => {
             select: { username: { select: { username: true } } },
           },
           _count: { select: { blogLikes: true } },
-          blogLikes: { where: { usernameId: req.usernameId } },
+          blogLikes: { where: { usernameId: req.user.usernameId } },
         }
       : {
           user: {
@@ -112,7 +112,6 @@ blogController.getSingle = async (req, res, next) => {
     });
 
     blog.likedByUser = blog.blogLikes?.length > 0;
-    delete blog.blogLikes;
 
     if (!blog) {
       return res.status(404).json({ message: 'Not found.' });

@@ -5,13 +5,14 @@ import {
   authJWT,
   authJWTUsernameOnly,
   optionalAuthJWT,
+  optionalAuthJWTCombined,
 } from '../libs/passport.js';
 import commentRouter from './commentRouter.js';
 
 const blogRouter = Router();
 
 blogRouter.get('/', optionalAuthJWT, blogController.getAll);
-blogRouter.get('/:id', optionalAuthJWT, blogController.getSingle);
+blogRouter.get('/:id', optionalAuthJWTCombined, blogController.getSingle);
 blogRouter.post('/', authJWT, blogController.post);
 blogRouter.put('/:id', authJWT, blogController.put);
 blogRouter.delete('/:id', authJWT, blogController.delete);

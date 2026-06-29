@@ -3,10 +3,7 @@ import { body, validationResult, matchedData } from 'express-validator';
 import { prisma } from '../libs/prisma.js';
 
 const commentController = {};
-const commentValidation = [
-  body('body').trim().notEmpty(),
-  body('usernameId').trim().notEmpty(),
-];
+const commentValidation = [body('body').trim().notEmpty()];
 
 const putcommentValidation = [body('body').trim().notEmpty().optional()];
 
@@ -46,6 +43,7 @@ commentController.getAll = async (req, res, next) => {
 commentController.post = [
   commentValidation,
   async (req, res, next) => {
+    const { usernameId } = req.user;
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -55,11 +53,12 @@ commentController.post = [
       });
       return res.status(400).json({ fieldErrors });
     }
-    const data = matchedData(req);
+    const { body } = matchedData(req);
+
     try {
       const { blogId } = req.params;
       const comment = await prisma.comment.create({
-        data: { blogId: blogId, ...data },
+        data: { blogId: blogId, body, usernameId },
       });
 
       return res.status(200).json({ success: true, comment });

@@ -239,7 +239,6 @@ authController.createUsername = [
       // return Authorization
       const token = jwt.sign(
         {
-          username: user.username,
           usernameId: user.id,
         },
         process.env.JWT_SECRET,

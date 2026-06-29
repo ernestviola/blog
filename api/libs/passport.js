@@ -11,6 +11,7 @@ passport.use(
   'jwt',
   new JwtStrategy(opts, async (payload, done) => {
     try {
+      if (!payload.sub) return done(null, false);
       const user = await prisma.user.findUnique({
         where: {
           id: payload.sub,
@@ -34,10 +35,12 @@ passport.use(
           id: payload.usernameId,
         },
       });
-      user.usernameId = user.id;
 
-      if (user) return done(null, user);
-      return done(null, false);
+      if (!user) return done(null, false);
+
+      user.usernameId = user.id;
+      // delete user.id;
+      return done(null, user);
     } catch (err) {
       done(err);
     }
@@ -54,6 +57,38 @@ export const optionalAuthJWT = (req, res, next) => {
     if (err) return next(err);
     if (user) req.user = user;
     next();
+  })(req, res, next);
+};
+
+export const optionalAuthJWTUsernameOnly = (req, res, next) => {
+  passport.authenticate(
+    'jwt-username-only',
+    { session: false },
+    (err, user) => {
+      if (err) return next(err);
+      if (user) req.user = user;
+      next();
+    },
+  )(req, res, next);
+};
+
+export const optionalAuthJWTCombined = (req, res, next) => {
+  passport.authenticate('jwt', { session: false }, (err, user) => {
+    if (err) return next(err);
+    if (user) {
+      req.user = user;
+      return next();
+    }
+    // fall back to username-only
+    passport.authenticate(
+      'jwt-username-only',
+      { session: false },
+      (err, user) => {
+        if (err) return next(err);
+        if (user) req.user = user;
+        next();
+      },
+    )(req, res, next);
   })(req, res, next);
 };
 
