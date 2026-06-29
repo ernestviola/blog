@@ -1,9 +1,8 @@
 import Editor from '@components/Editor';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './view.module.css';
 import { useNavigate, useParams } from 'react-router';
 import Loading from '@components/Loading';
-import Toast from '@components/Toast';
 import BackButton from '@components/BackButton';
 import Comments from '@components/Comments';
 import { BiHeart, BiSolidHeart } from 'react-icons/bi';
@@ -17,7 +16,6 @@ const View = () => {
 
   const { blogId } = useParams();
   const [blog, setBlog] = useState(null);
-  const [toasts, setToasts] = useState([]);
   const [liked, setLiked] = useState(false);
   const [openUsernameSignUp, setOpenUsernameSignUp] = useState(false);
 
@@ -44,9 +42,8 @@ const View = () => {
         const data = await response.json();
         setBlog(data.blog);
         setLiked(data.blog.likedByUser);
-        console.log(data.blog);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     }
 
@@ -78,24 +75,13 @@ const View = () => {
 
       if (!response.ok) {
         setLiked(prevLikedState);
+        throw new Error('Issues liking the blog.');
       }
-      const data = await response.json();
-
-      console.log(data);
     } catch (error) {
       console.error(error);
       setLiked(prevLikedState);
     }
   };
-
-  const addToast = useCallback((status) => {
-    const id = crypto.randomUUID();
-    setToasts((prev) => [...prev, { id, status }]);
-  }, []);
-
-  const removeToast = useCallback((id) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
-  }, []);
 
   if (blog === null) {
     return <Loading />;
@@ -104,22 +90,6 @@ const View = () => {
   return (
     <>
       <div className={styles.container}>
-        <div className={styles.toasts}>
-          {toasts.map((toast) => {
-            return (
-              <Toast
-                key={toast.id}
-                color='#55ff'
-                id={toast.id}
-                removeToast={removeToast}
-                msUntilRemoval={1000}
-              >
-                {toast.status}
-              </Toast>
-            );
-          })}
-        </div>
-
         <div className={styles.header}>
           <BackButton />
         </div>

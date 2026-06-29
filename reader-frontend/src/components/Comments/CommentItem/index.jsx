@@ -3,33 +3,44 @@ import { BiHeart, BiSolidHeart } from 'react-icons/bi';
 import Editor from '@components/Editor';
 import styles from './commentItem.module.css';
 import { useAuth } from '@contexts/AuthContext.jsx';
+import { useState } from 'react';
+import UsernameSignUp from '@components/UsernameSignUp';
+import { authFetch } from '@utils/auth.js';
 
-const CommentItem = ({ comment, onCommentUpdate }) => {
+const CommentItem = ({ comment }) => {
   const { usernameId } = useAuth();
+  const [liked, setLiked] = useState(comment?.likedByUser ?? false);
+  const [likeCount, setLikeCount] = useState(comment?._count?.commentLikes);
+  const [openUsernameSignUp, setOpenUsernameSignUp] = useState(false);
+
   const handleLike = async () => {
-    if (!usernameId) return;
+    if (!usernameId) {
+      setOpenUsernameSignUp(true);
+      return;
+    }
+    const likedPrevState = liked;
+    setLiked(!liked);
+    // if true then subtract
+    if (likedPrevState) {
+      setLikeCount(likeCount - 1);
+    } else {
+      setLikeCount(likeCount + 1);
+    }
 
     try {
-      const params = new URLSearchParams();
-      if (usernameId) params.set('usernameId', usernameId);
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/blogs/${comment.blogId}/comments/${comment.id}/like?${params}`,
+      const response = await authFetch(
+        `${import.meta.env.VITE_API_URL}/api/blogs/${comment.blogId}/comments/${comment.id}/like`,
         {
-          method: 'POST',
-          body: JSON.stringify({
-            usernameId,
-            commentId: comment.id,
-          }),
+          method: liked ? 'DELETE' : 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
         },
       );
-      console.log(response);
-      if (!response.ok) throw new Error('Issues liking the comment.');
-
-      const data = await response.json();
-      onCommentUpdate(data.comment);
+      if (!response.ok) {
+        setLiked(likedPrevState);
+        throw new Error('Issues liking the comment.');
+      }
     } catch (error) {
       console.log(error);
     }
@@ -54,11 +65,15 @@ const CommentItem = ({ comment, onCommentUpdate }) => {
       <div className={styles.footer}>
         <div className={styles.heartContainer}>
           <button className={styles.heartButton} onClick={handleLike}>
-            {comment.likedByUser ? <BiSolidHeart /> : <BiHeart />}
+            {liked ? <BiSolidHeart /> : <BiHeart />}
           </button>
-          <span>{comment._count.commentLikes}</span>
+          <span>{likeCount}</span>
         </div>
       </div>
+      <UsernameSignUp
+        open={openUsernameSignUp}
+        setOpen={setOpenUsernameSignUp}
+      />
     </div>
   );
 };

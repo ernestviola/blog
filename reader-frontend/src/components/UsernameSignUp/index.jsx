@@ -49,10 +49,6 @@ const UsernameSignUp = ({ open, setOpen }) => {
     // try to send the username
   };
 
-  function showDialog() {
-    dialogRef.current.showModal();
-  }
-
   function hideDialog() {
     dialogRef.current.close();
     setOpen(false);
@@ -67,53 +63,73 @@ const UsernameSignUp = ({ open, setOpen }) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
   return (
-    <dialog ref={dialogRef} className={styles.dialog}>
+    <>
       <div className={styles.toasts}>
         {toasts.map((toast) => {
           return (
             <Toast
               key={toast.id}
-              color='#7f1d1d'
+              color='#55ff'
               id={toast.id}
               removeToast={removeToast}
+              msUntilRemoval={1000}
             >
               {toast.status}
             </Toast>
           );
         })}
       </div>
-      <form onSubmit={(e) => handleUsernameSubmit(e)}>
-        <div>
-          <h2>Create a username!</h2>
-          <ol>
-            <li>Create a username in order to leave a comment.</li>{' '}
-            <li>Sign up with that username to keep your username!</li>
-          </ol>
+      <dialog ref={dialogRef} className={styles.dialog}>
+        <div className={styles.toasts}>
+          {toasts.map((toast) => {
+            return (
+              <Toast
+                key={toast.id}
+                color='#7f1d1d'
+                id={toast.id}
+                removeToast={removeToast}
+              >
+                {toast.status}
+              </Toast>
+            );
+          })}
         </div>
-        <input
-          className={styles.input}
-          type='text'
-          placeholder='username'
-          aria-label='username'
-          value={newUsername}
-          onChange={(e) => {
-            setNewUsername(e.target.value);
-          }}
-        />
-        <div className={styles.dialogButtons}>
-          <button
-            onClick={() => hideDialog()}
-            className={`${styles.button} ${styles.cancel}`}
-            type='button'
-          >
-            Cancel
-          </button>
-          <button type='submit' className={`${styles.button} ${styles.submit}`}>
-            Submit
-          </button>
-        </div>
-      </form>
-    </dialog>
+        <form onSubmit={(e) => handleUsernameSubmit(e)}>
+          <div>
+            <h2>Create a username!</h2>
+            <ol>
+              <li>Create a username in order to leave a comment.</li>{' '}
+              <li>Sign up with that username to keep your username!</li>
+            </ol>
+          </div>
+          <input
+            className={styles.input}
+            type='text'
+            placeholder='username'
+            aria-label='username'
+            value={newUsername}
+            onChange={(e) => {
+              setNewUsername(e.target.value);
+            }}
+          />
+          <div className={styles.dialogButtons}>
+            <button
+              onClick={() => hideDialog()}
+              className={`${styles.button} ${styles.cancel}`}
+              type='button'
+            >
+              Cancel
+            </button>
+            <button
+              type='submit'
+              className={`${styles.button} ${styles.submit}`}
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </dialog>
+    </>
   );
 };
 
