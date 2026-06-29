@@ -3,11 +3,11 @@ const commentLikeController = {};
 
 commentLikeController.post = async (req, res, next) => {
   const { commentId } = req.params;
-  const { usernameId } = req.usernameId;
+  const { usernameId } = req.user;
 
   try {
     await prisma.commentLike.create({
-      where: {
+      data: {
         usernameId,
         commentId,
       },
@@ -31,13 +31,15 @@ commentLikeController.post = async (req, res, next) => {
 
 commentLikeController.delete = async (req, res, next) => {
   const { commentId } = req.params;
-  const { usernameId } = req.usernameId;
+  const { usernameId } = req.user;
 
   try {
     await prisma.commentLike.delete({
       where: {
-        usernameId,
-        commentId,
+        commentId_usernameId: {
+          commentId,
+          usernameId,
+        },
       },
     });
 
