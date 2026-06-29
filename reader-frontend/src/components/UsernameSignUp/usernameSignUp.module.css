@@ -1,0 +1,102 @@
+.toasts {
+  position: fixed;
+  top: 0;
+  right: 50%;
+  transform: translateX(50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  color: white;
+}
+
+.editor {
+  padding: 1rem 2rem;
+}
+
+.commentForm {
+  border-radius: 1rem;
+  background-color: rgb(30, 30, 30);
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: text;
+}
+
+.commentButton {
+  flex-grow: 0;
+  align-self: flex-end;
+  margin: 1rem 2rem;
+
+  background-color: var(--accent);
+}
+
+.button {
+  padding: 0.6rem 1rem;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1.5rem;
+  transition: background-color 0.2s ease-out;
+}
+
+.button {
+  transition: background-color 0.2s ease-out;
+}
+
+.button:disabled {
+  cursor: auto;
+}
+
+.dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.dialog[open] {
+  text-align: center;
+  gap: 2rem;
+  border-radius: 8px;
+  padding: 2rem 5rem;
+}
+
+.dialog > form {
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dialog ol {
+  text-align: left;
+}
+
+.input {
+  margin: 2rem;
+  padding: 10px 15px;
+  border: 2px solid black;
+  border-radius: 9999px;
+}
+
+.dialogButtons {
+  display: flex;
+  gap: 1rem;
+}
+
+.submit {
+  background-color: var(--accent);
+}
+
+.submit:not(:disabled):hover,
+.submit:not(:disabled):focus {
+  background-color: var(--accent-hover);
+}
+
+.cancel {
+  background-color: var(--cancel);
+}
+
+.cancel:hover,
+.cancel:focus {
+  background-color: var(--cancel-hover);
+}

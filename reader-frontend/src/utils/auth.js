@@ -46,7 +46,7 @@ export const logout = () => {
   localStorage.removeItem('token');
 };
 
-export const authFetch = async (url, options = {}, navigate) => {
+export const authFetch = async (url, options = {}) => {
   const response = await fetch(url, {
     ...options,
     headers: {
