@@ -1,4 +1,4 @@
-import { body, validationResult, matchedData, query } from 'express-validator';
+import { body, query, validationResult, matchedData } from 'express-validator';
 
 import { prisma } from '../libs/prisma.js';
 
@@ -9,19 +9,24 @@ const blogValidation = [
   body('published').isBoolean().optional(),
 ];
 
-const searchParams = [query('title').trim().optional()];
-
 const putBlogValidation = [
   body('title').trim().optional(),
   body('body').trim().optional(),
   body('published').isBoolean().optional(),
 ];
 
+const searchParams = [
+  query('title').trim().optional(),
+  query('page').optional().isInt({ min: 1 }).toInt(),
+  query('limit').optional().isInt({ min: 1 }).toInt(),
+  query('sort').optional(),
+  query('order').optional(),
+];
+
 blogController.getAll = [
   searchParams,
   async (req, res, next) => {
     try {
-      // check if user is logged in. if true then return their unpublished posts
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         const fieldErrors = {};
@@ -31,37 +36,45 @@ blogController.getAll = [
         return res.status(400).json({ fieldErrors });
       }
 
-      const { title } = matchedData(req);
+      const {
+        title,
+        page = 1,
+        limit = 10,
+        sort = 'added',
+        order = 'desc',
+      } = matchedData(req);
 
-      let blogs;
-      if (req.user) {
-        blogs = await prisma.blog.findMany({
-          include: {
-            user: {
-              select: { username: { select: { username: true } } },
-            },
-          },
-          where: {
+      const where = req.user
+        ? {
             OR: [{ published: true }, { userId: req.user.id }],
             title: {
               contains: title,
               mode: 'insensitive',
             },
-          },
-        });
-      } else {
-        // if not only return published posts
-        blogs = await prisma.blog.findMany({
-          include: {
-            user: {
-              select: { username: { select: { username: true } } },
-            },
-          },
-          where: {
+          }
+        : {
             published: true,
-          },
-        });
-      }
+          };
+
+      const include = {
+        user: {
+          select: { username: { select: { username: true } } },
+        },
+      };
+
+      const orderBy = {
+        [sort]: order,
+      };
+
+      const skip = (page - 1) * limit;
+
+      const blogs = await prisma.blog.findMany({
+        include,
+        where,
+        orderBy,
+        skip,
+        take: limit,
+      });
 
       if (!blogs.length) {
         return res.status(404).json({ message: 'Not found.' });
