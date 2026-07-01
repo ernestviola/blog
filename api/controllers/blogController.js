@@ -44,22 +44,20 @@ blogController.getAll = [
         order = 'desc',
       } = matchedData(req);
 
-      const where = req.user
-        ? {
-            OR: [{ published: true }, { userId: req.user.id }],
-            title: {
-              contains: title,
-              mode: 'insensitive',
-            },
-          }
-        : {
-            published: true,
-          };
+      const where = {
+        ...(req.user
+          ? { OR: [{ published: true }, { userId: req.user.id }] }
+          : { published: true }),
+        ...(title && {
+          title: { contains: title, mode: 'insensitive' },
+        }),
+      };
 
       const include = {
         user: {
           select: { username: { select: { username: true } } },
         },
+        _count: { select: { blogLikes: true } },
       };
 
       const orderBy = {

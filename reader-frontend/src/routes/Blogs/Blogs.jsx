@@ -79,10 +79,11 @@ const Home = () => {
             type='text'
             className={styles.search}
             placeholder='search'
-            value={title}
+            value={title ?? ''}
             onChange={(e) => {
               const value = e.target.value;
               setSearchParams(value ? { title: value } : {});
+              setPage(1);
             }}
           />
         </div>
@@ -99,7 +100,7 @@ const Home = () => {
                 <div>
                   <div className={styles.blogStat}>
                     <BiHeart className={styles.heart} />
-                    <span>{blog.likes}</span>
+                    <span>{blog._count.blogLikes}</span>
                   </div>
                   <div className={styles.blogStat}>
                     <BsEye className={styles.eye} />
