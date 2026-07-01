@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router';
 import { authFetch } from '@utils/auth.js';
 import styles from './blogs.module.css';
@@ -11,6 +11,7 @@ import Loading from '@components/Loading';
 
 const Home = () => {
   const navigate = useNavigate();
+  const [firstLoad, setFirstLoad] = useState(true);
   const [blogs, setBlogs] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -18,7 +19,7 @@ const Home = () => {
   const title = searchParams.get('title');
 
   useEffect(() => {
-    document.title = 'Your Blogs';
+    document.title = 'All Blogs';
   }, []);
 
   useEffect(() => {
@@ -48,6 +49,8 @@ const Home = () => {
         console.error(error);
       } finally {
         setLoading(false);
+        setFirstLoad(false);
+        window.scrollTo(0, 0);
       }
     }
 
@@ -60,7 +63,7 @@ const Home = () => {
     };
   }, [navigate, title, page]);
 
-  if (loading)
+  if (firstLoad)
     return (
       <div>
         <Loading />
@@ -84,41 +87,43 @@ const Home = () => {
           />
         </div>
       </div>
-      <ul className={styles.blogs}>
-        {blogs.map((blog) => (
-          <li key={blog.id}>
-            <Link
-              className={styles.blogItem}
-              to={`/blogs/${blog.id}`}
-              viewTransition
-            >
-              <div>
-                <div className={styles.blogStat}>
-                  <BiHeart className={styles.heart} />
-                  <span>{blog.likes}</span>
+      {!loading && (
+        <ul className={styles.blogs}>
+          {blogs.map((blog) => (
+            <li key={blog.id}>
+              <Link
+                className={styles.blogItem}
+                to={`/blogs/${blog.id}`}
+                viewTransition
+              >
+                <div>
+                  <div className={styles.blogStat}>
+                    <BiHeart className={styles.heart} />
+                    <span>{blog.likes}</span>
+                  </div>
+                  <div className={styles.blogStat}>
+                    <BsEye className={styles.eye} />
+                    <span>{blog.views}</span>
+                  </div>
                 </div>
-                <div className={styles.blogStat}>
-                  <BsEye className={styles.eye} />
-                  <span>{blog.views}</span>
+                <div className={styles.content}>
+                  <h2 className={styles.title}>{blog.title}</h2>
+                  <p>Author: {blog.user.username.username}</p>
+                  <p>
+                    Updated:{' '}
+                    {new Date(blog.updated).toLocaleDateString('en-US', {
+                      weekday: 'short',
+                      month: 'long',
+                      day: 'numeric',
+                      year: 'numeric',
+                    })}
+                  </p>
                 </div>
-              </div>
-              <div className={styles.content}>
-                <h2 className={styles.title}>{blog.title}</h2>
-                <p>Author: {blog.user.username.username}</p>
-                <p>
-                  Updated:{' '}
-                  {new Date(blog.updated).toLocaleDateString('en-US', {
-                    weekday: 'short',
-                    month: 'long',
-                    day: 'numeric',
-                    year: 'numeric',
-                  })}
-                </p>
-              </div>
-            </Link>
-          </li>
-        ))}
-      </ul>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
       <div className={styles.pages}>
         <div>
           <button
