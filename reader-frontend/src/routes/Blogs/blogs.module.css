@@ -90,3 +90,8 @@
   background-color: transparent;
   border: none;
 }
+
+.pages {
+  display: flex;
+  justify-content: center;
+}

@@ -7,12 +7,13 @@ import { BiHeart } from 'react-icons/bi';
 import { BsEye } from 'react-icons/bs';
 import { BiSearch } from 'react-icons/bi';
 import { BiLeftArrow, BiRightArrow } from 'react-icons/bi';
+import Loading from '@components/Loading';
 
 const Home = () => {
   const navigate = useNavigate();
   const [blogs, setBlogs] = useState([]);
   const [page, setPage] = useState(1);
-
+  const [loading, setLoading] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
   const title = searchParams.get('title');
 
@@ -22,12 +23,14 @@ const Home = () => {
 
   useEffect(() => {
     async function fetchData() {
+      setLoading(true);
       try {
         const params = new URLSearchParams();
         if (title) params.set('title', title);
+        params.set('page', page);
 
         const response = await authFetch(
-          `${import.meta.env.VITE_API_URL}/api/blogs`,
+          `${import.meta.env.VITE_API_URL}/api/blogs?${params.toString()}`,
           {
             method: 'GET',
           },
@@ -43,6 +46,8 @@ const Home = () => {
         // network error try again
         setBlogs([]);
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -53,7 +58,14 @@ const Home = () => {
     return () => {
       clearTimeout(timeout);
     };
-  }, [navigate, title]);
+  }, [navigate, title, page]);
+
+  if (loading)
+    return (
+      <div>
+        <Loading />
+      </div>
+    );
 
   return (
     <div>
@@ -107,14 +119,19 @@ const Home = () => {
           </li>
         ))}
       </ul>
-      <div>
-        <button>
-          <BiLeftArrow />
-        </button>
-        {page}
-        <button>
-          <BiRightArrow />
-        </button>
+      <div className={styles.pages}>
+        <div>
+          <button
+            disabled={page <= 1}
+            onClick={() => setPage((prev) => prev - 1)}
+          >
+            <BiLeftArrow />
+          </button>
+          {page}
+          <button onClick={() => setPage((prev) => prev + 1)}>
+            <BiRightArrow />
+          </button>
+        </div>
       </div>
     </div>
   );
