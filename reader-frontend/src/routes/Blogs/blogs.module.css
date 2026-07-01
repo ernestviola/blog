@@ -95,3 +95,28 @@
   display: flex;
   justify-content: center;
 }
+
+.paginationControls {
+  display: flex;
+  align-items: center;
+  font-size: 2rem;
+}
+
+.paginationControls > button {
+  padding: 2rem;
+}
+
+.turnPage {
+  background-color: transparent;
+  border: none;
+  color: var(--accent);
+}
+
+.turnPage:hover:not(:disabled) {
+  color: var(--accent-hover);
+}
+
+.turnPage:disabled {
+  color: var(--gray);
+  cursor: auto;
+}

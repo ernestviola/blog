@@ -125,15 +125,19 @@ const Home = () => {
         </ul>
       )}
       <div className={styles.pages}>
-        <div>
+        <div className={styles.paginationControls}>
           <button
             disabled={page <= 1}
             onClick={() => setPage((prev) => prev - 1)}
+            className={styles.turnPage}
           >
             <BiLeftArrow />
           </button>
           {page}
-          <button onClick={() => setPage((prev) => prev + 1)}>
+          <button
+            onClick={() => setPage((prev) => prev + 1)}
+            className={styles.turnPage}
+          >
             <BiRightArrow />
           </button>
         </div>
