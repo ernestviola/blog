@@ -8,12 +8,7 @@ This project is ran on 3 different servers.
 
 ## TODO
 
-- Ordering for Blogs
-  - Pagination
-
-- Ordering for Comments
-  - Pagination
-
+- Filtering
 - Let anonymous users know they're Logged In As 'Username' and change the navbar route depending on what's given
   - Logout for users that are fully logged in
 

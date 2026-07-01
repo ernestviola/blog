@@ -66,19 +66,24 @@ blogController.getAll = [
 
       const skip = (page - 1) * limit;
 
-      const blogs = await prisma.blog.findMany({
-        include,
-        where,
-        orderBy,
-        skip,
-        take: limit,
-      });
+      const [blogs, totalCount] = await prisma.$transaction([
+        prisma.blog.findMany({
+          include,
+          where,
+          orderBy,
+          skip,
+          take: limit,
+        }),
+        prisma.blog.count({ where }),
+      ]);
+
+      const totalPages = Math.ceil(totalCount / limit);
 
       if (!blogs.length) {
         return res.status(404).json({ message: 'Not found.' });
       }
 
-      return res.status(200).json({ success: true, blogs, page });
+      return res.status(200).json({ success: true, blogs, page, totalPages });
     } catch (error) {
       next(error);
     }

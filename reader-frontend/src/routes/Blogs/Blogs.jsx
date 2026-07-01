@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router';
 import { authFetch } from '@utils/auth.js';
 import styles from './blogs.module.css';
@@ -6,14 +6,16 @@ import styles from './blogs.module.css';
 import { BiHeart } from 'react-icons/bi';
 import { BsEye } from 'react-icons/bs';
 import { BiSearch } from 'react-icons/bi';
-import { BiLeftArrow, BiRightArrow } from 'react-icons/bi';
+import { BiSolidLeftArrow, BiSolidRightArrow } from 'react-icons/bi';
 import Loading from '@components/Loading';
+import { transformCount } from '@utils/countsSimplifier.js';
 
 const Home = () => {
   const navigate = useNavigate();
   const [firstLoad, setFirstLoad] = useState(true);
   const [blogs, setBlogs] = useState([]);
   const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
   const title = searchParams.get('title');
@@ -43,6 +45,8 @@ const Home = () => {
 
         const data = await response.json();
         setBlogs(data.blogs);
+        setTotalPages(data.totalPages);
+        console.log(data.blogs);
       } catch (error) {
         // network error try again
         setBlogs([]);
@@ -97,14 +101,14 @@ const Home = () => {
                 to={`/blogs/${blog.id}`}
                 viewTransition
               >
-                <div>
+                <div className={styles.statContainer}>
                   <div className={styles.blogStat}>
                     <BiHeart className={styles.heart} />
-                    <span>{blog._count.blogLikes}</span>
+                    <span>{transformCount(blog._count.blogLikes)}</span>
                   </div>
                   <div className={styles.blogStat}>
                     <BsEye className={styles.eye} />
-                    <span>{blog.views}</span>
+                    <span>{transformCount(blog.views)}</span>
                   </div>
                 </div>
                 <div className={styles.content}>
@@ -132,14 +136,15 @@ const Home = () => {
             onClick={() => setPage((prev) => prev - 1)}
             className={styles.turnPage}
           >
-            <BiLeftArrow />
+            <BiSolidLeftArrow />
           </button>
-          {page}
+          Page {page} of {totalPages}
           <button
+            disabled={page === totalPages}
             onClick={() => setPage((prev) => prev + 1)}
             className={styles.turnPage}
           >
-            <BiRightArrow />
+            <BiSolidRightArrow />
           </button>
         </div>
       </div>
