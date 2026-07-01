@@ -8,13 +8,7 @@ This project is ran on 3 different servers.
 
 ## TODO
 
-- Filtering
-- Let anonymous users know they're Logged In As 'Username' and change the navbar route depending on what's given
-  - Logout for users that are fully logged in
-
-  - Sign Up to claim your account
-
-  - Log In
+- Make sure that the author frontend also works similar to the reader frontend.
 
 ## API
 

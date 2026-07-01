@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { isLoggedIn, logout } from '@utils/auth.js';
 import styles from './navbar.module.css';
+import { useAuth } from '@contexts/AuthContext.jsx';
 
 const Navbar = () => {
   const [loggedIn, setLoggedIn] = useState(false);
-
+  const { username } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,11 +33,22 @@ const Navbar = () => {
       </div>
       <div className={styles.right}>
         {loggedIn ? (
-          <Link onClick={() => handleLogout()}>Logout</Link>
+          <span>
+            Username: {username}{' '}
+            <Link onClick={() => handleLogout()}>Logout</Link>
+          </span>
+        ) : username ? (
+          <>
+            <span>
+              Username: {username} <Link to='/signup'>Create your account</Link>
+            </span>
+          </>
         ) : (
-          <Link to='/login' viewTransition>
-            Log In
-          </Link>
+          <span>
+            <Link to='/login' viewTransition>
+              Log In
+            </Link>
+          </span>
         )}
       </div>
     </div>

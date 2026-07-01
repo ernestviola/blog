@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import Toast from '@components/Toast';
 import { setUserFields } from '@utils/auth.js';
-import styles from './UsernameSignUp.module.css';
+import styles from './usernameSignUp.module.css';
 import { useAuth } from '@contexts/AuthContext.jsx';
 
 const UsernameSignUp = ({ open, setOpen }) => {
@@ -96,9 +96,9 @@ const UsernameSignUp = ({ open, setOpen }) => {
         </div>
         <form onSubmit={(e) => handleUsernameSubmit(e)}>
           <div>
-            <h2>Create a username!</h2>
+            <h2 className={styles.title}>Create a username!</h2>
             <ol>
-              <li>Create a username in order to leave a comment.</li>{' '}
+              <li>Create a username in order to leave a comment or like.</li>{' '}
               <li>Sign up with that username to keep your username!</li>
             </ol>
           </div>

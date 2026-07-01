@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react';
 import styles from '../auth.module.css';
 import { Link, useNavigate } from 'react-router';
 import Toast from '@components/Toast';
-import { isLoggedIn, setUserFields } from '@utils/auth.js';
+import { getUsername, isLoggedIn, setUserFields } from '@utils/auth.js';
 import { useAuth } from '@contexts/AuthContext.jsx';
 
 const Signup = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState(getUsername());
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});

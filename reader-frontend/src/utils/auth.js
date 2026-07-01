@@ -32,6 +32,22 @@ export const getUsernameId = () => {
   }
 };
 
+export const getUsername = () => {
+  const token = localStorage.getItem('token');
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    if (isTokenExpired()) {
+      // remove token since expired
+      localStorage.removeItem('token');
+    } else {
+      return payload.username;
+    }
+  } catch {
+    return null;
+  }
+};
+
 export const setUserFields = (data) => {
   localStorage.setItem('token', data.token);
 };
