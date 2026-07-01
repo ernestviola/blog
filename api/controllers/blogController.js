@@ -80,7 +80,7 @@ blogController.getAll = [
         return res.status(404).json({ message: 'Not found.' });
       }
 
-      return res.status(200).json({ success: true, blogs });
+      return res.status(200).json({ success: true, blogs, page });
     } catch (error) {
       next(error);
     }

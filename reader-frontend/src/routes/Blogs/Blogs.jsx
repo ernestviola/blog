@@ -6,10 +6,12 @@ import styles from './blogs.module.css';
 import { BiHeart } from 'react-icons/bi';
 import { BsEye } from 'react-icons/bs';
 import { BiSearch } from 'react-icons/bi';
+import { BiLeftArrow, BiRightArrow } from 'react-icons/bi';
 
 const Home = () => {
   const navigate = useNavigate();
   const [blogs, setBlogs] = useState([]);
+  const [page, setPage] = useState(1);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const title = searchParams.get('title');
@@ -24,21 +26,23 @@ const Home = () => {
         const params = new URLSearchParams();
         if (title) params.set('title', title);
 
-        const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/blogs?${params.toString()}`,
+        const response = await authFetch(
+          `${import.meta.env.VITE_API_URL}/api/blogs`,
           {
             method: 'GET',
           },
-          navigate,
         );
 
-        if (response.ok) {
-          const data = await response.json();
-          setBlogs(data.blogs);
+        if (!response.ok) {
+          throw new Error('Issues getting the blogs.');
         }
-      } catch {
+
+        const data = await response.json();
+        setBlogs(data.blogs);
+      } catch (error) {
         // network error try again
         setBlogs([]);
+        console.error(error);
       }
     }
 
@@ -103,6 +107,15 @@ const Home = () => {
           </li>
         ))}
       </ul>
+      <div>
+        <button>
+          <BiLeftArrow />
+        </button>
+        {page}
+        <button>
+          <BiRightArrow />
+        </button>
+      </div>
     </div>
   );
 };

@@ -8,20 +8,18 @@ This project is ran on 3 different servers.
 
 ## TODO
 
-- Comments section for blogs
-  - comment item requires a user to have logged in with a username
-
-  - stored in local storage with their usernameId
-
-- a way so that users can signup with that username that they setup
-
-- Like button for the blog. Also views count
-
 - Ordering for Blogs
   - Pagination
 
 - Ordering for Comments
   - Pagination
+
+- Let anonymous users know they're Logged In As 'Username' and change the navbar route depending on what's given
+  - Logout for users that are fully logged in
+
+  - Sign Up to claim your account
+
+  - Log In
 
 ## API
 
