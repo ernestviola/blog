@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { authFetch } from '@utils/auth.js';
 import styles from './blogs.module.css';
 import NewBlogButton from '@components/NewBlogButton';
@@ -12,7 +12,6 @@ import Loading from '@components/Loading';
 import { transformCount } from '@utils/countsSimplifier.js';
 
 const Home = () => {
-  const navigate = useNavigate();
   const [firstLoad, setFirstLoad] = useState(true);
   const [blogs, setBlogs] = useState([]);
   const [page, setPage] = useState(1);
@@ -64,7 +63,7 @@ const Home = () => {
     return () => {
       clearTimeout(timeout);
     };
-  }, [navigate, title, page]);
+  }, [title, page]);
 
   if (firstLoad)
     return (

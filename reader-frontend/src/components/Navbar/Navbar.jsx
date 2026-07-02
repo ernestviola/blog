@@ -1,25 +1,15 @@
-import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
-import { isLoggedIn, logout } from '@utils/auth.js';
+import { logout } from '@utils/auth.js';
 import styles from './navbar.module.css';
 import { useAuth } from '@contexts/AuthContext.jsx';
 
 const Navbar = () => {
-  const [loggedIn, setLoggedIn] = useState(false);
-  const { username } = useAuth();
+  const { loggedIn, username, refreshAuth } = useAuth();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    function checkLoggedIn() {
-      setLoggedIn(isLoggedIn());
-    }
-
-    checkLoggedIn();
-  });
 
   const handleLogout = () => {
     logout();
-    setLoggedIn(false);
+    refreshAuth();
     navigate('/login', { viewTransition: true });
   };
 
