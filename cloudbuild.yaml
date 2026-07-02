@@ -6,8 +6,8 @@ substitutions:
   _READER_SERVICE: blog-reader-frontend
   _INSTANCE_CONNECTION: pet-projects-461723:us-central1:the-odin-project
   _DB_NAME: blog
-  _AUTHOR_CLIENT_URL: ''
-  _READER_CLIENT_URL: ''
+  _AUTHOR_CLIENT_URL: 'https://blog-author-frontend-ddym74estq-uc.a.run.app'
+  _READER_CLIENT_URL: 'https://blog-reader-frontend-ddym74estq-uc.a.run.app'
 
 options:
   logging: CLOUD_LOGGING_ONLY
