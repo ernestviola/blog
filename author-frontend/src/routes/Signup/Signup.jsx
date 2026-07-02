@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import styles from '../auth.module.css';
 import { Link, useNavigate } from 'react-router-dom';
 import Toast from '@components/Toast';
-import { isLoggedIn } from '@utils/auth.js';
+import { isLoggedIn, setUserFields } from '@utils/auth.js';
+import { useAuth } from '@contexts/AuthContext.jsx';
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -14,12 +15,14 @@ const Signup = () => {
   const [errorObjects, setErrorObjects] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const { loggedIn, refreshAuth } = useAuth();
+
   useEffect(() => {
     document.title = 'Sign up';
   }, []);
 
   useEffect(() => {
-    if (isLoggedIn()) {
+    if (loggedIn) {
       navigate('/blogs', { viewTransition: true });
     }
   });
@@ -55,7 +58,8 @@ const Signup = () => {
 
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem('token', data.token);
+        setUserFields(data);
+        refreshAuth();
       } else if (response.status === 400 || response.status === 409) {
         const data = await response.json();
         const errorObj = Object.values(data.fieldErrors).map((error) => {
