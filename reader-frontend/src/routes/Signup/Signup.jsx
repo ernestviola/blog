@@ -2,7 +2,12 @@ import { useState, useEffect } from 'react';
 import styles from '../auth.module.css';
 import { Link, useNavigate } from 'react-router';
 import Toast from '@components/Toast';
-import { getUsername, isLoggedIn, setUserFields } from '@utils/auth.js';
+import {
+  authFetch,
+  getUsername,
+  isLoggedIn,
+  setUserFields,
+} from '@utils/auth.js';
 import { useAuth } from '@contexts/AuthContext.jsx';
 
 const Signup = () => {
@@ -40,7 +45,7 @@ const Signup = () => {
       setLoading(true);
       setFieldErrors({});
       setErrorObjects([]);
-      const response = await fetch(
+      const response = await authFetch(
         `${import.meta.env.VITE_API_URL}/api/signup`,
         {
           method: 'POST',

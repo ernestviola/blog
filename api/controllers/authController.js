@@ -57,6 +57,15 @@ authController.signup = [
   newUserValidation,
   async (req, res, next) => {
     // validate username, password, confirmation
+
+    /**
+     * a way for a user to claim their made username.
+     * if req.user === usernameId or username. compare that with the one they're sending
+     * if the new username doesn't exist proceed with the normal user creation
+     * if the username does exist confirm that it isn't already attached to a user
+     * if it is then fail
+     * if it isn't then confirm that the username they want is the one thats attached to the token
+     */
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -67,20 +76,47 @@ authController.signup = [
       return res.status(400).json({ fieldErrors });
     }
     const { email, username, password } = matchedData(req);
-    // store
     try {
+      // username and doesn't have a user attached.
+
+      if (req.user) {
+        const usernameAlreadyExists = await prisma.username.findFirst({
+          where: {
+            username: req.user.usernameId,
+          },
+          include: {
+            user: true,
+          },
+        });
+
+        if (usernameAlreadyExists && usernameAlreadyExists.user) {
+          // username has already been claimed
+          throw new Error('Username already exists.');
+        }
+      }
+
       const hash = await bcrypt.hash(password, 10);
-      const user = await prisma.user.create({
-        data: {
-          email,
-          password: hash,
+
+      const data = {
+        email,
+        password: hash,
+        ...(!req.user && {
           username: {
             create: { username },
           },
-        },
-        include: {
-          username: true,
-        },
+        }),
+        ...(req.user && {
+          usernameId: req.user.usernameId,
+        }),
+      };
+
+      const include = {
+        username: true,
+      };
+
+      const user = await prisma.user.create({
+        data,
+        include,
       });
 
       // return Authorization
@@ -102,6 +138,9 @@ authController.signup = [
         const emailInUse = await prisma.user.findFirst({ where: { email } });
         const usernameInUse = await prisma.username.findFirst({
           where: { username },
+          include: {
+            user: true,
+          },
         });
 
         const fieldErrors = {};
@@ -110,7 +149,7 @@ authController.signup = [
           fieldErrors['email'] = 'Email is already in use.';
         }
 
-        if (usernameInUse) {
+        if (usernameInUse && usernameInUse.user) {
           fieldErrors['username'] = 'Username is already in use.';
         }
         return res.status(409).json({ fieldErrors });
