@@ -1,0 +1,24 @@
+server {
+    listen ${PORT};
+    server_name _;
+
+    root /usr/share/nginx/html;
+    index index.html;
+
+    # React Router uses client-side routing (data mode / createBrowserRouter),
+    # so any path that isn't a real file needs to fall back to index.html.
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Static assets can be cached aggressively; index.html can't, since
+    # it's what points at the current hashed asset filenames.
+    location = /index.html {
+        add_header Cache-Control "no-cache";
+    }
+
+    location ~* \.(js|css|svg|png|jpg|jpeg|gif|woff2?)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+}

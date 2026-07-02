@@ -1,0 +1,170 @@
+substitutions:
+  _REGION: us-central1
+  _AR_REPO: blog-app
+  _API_SERVICE: blog-api
+  _AUTHOR_SERVICE: blog-author-frontend
+  _READER_SERVICE: blog-reader-frontend
+  _INSTANCE_CONNECTION: pet-projects-461723:us-central1:the-odin-project
+  _DB_NAME: blog
+  _AUTHOR_CLIENT_URL: ''
+  _READER_CLIENT_URL: ''
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+availableSecrets:
+  secretManager:
+    - versionName: projects/pet-projects-461723/secrets/TOP-SQL-USER/versions/latest
+      env: 'DB_USER'
+    - versionName: projects/pet-projects-461723/secrets/TOP-SQL-PW/versions/latest
+      env: 'DB_PASSWORD'
+
+steps:
+  - name: postgres:alpine
+    id: 'Create database'
+    entrypoint: sh
+    secretEnv: ['DB_USER', 'DB_PASSWORD']
+    args:
+      - -c
+      - |
+        wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
+        chmod +x cloud_sql_proxy
+        ./cloud_sql_proxy -instances=${_INSTANCE_CONNECTION}=tcp:5432 &
+        sleep 5
+        PGPASSWORD=$$DB_PASSWORD psql -h localhost -U $$DB_USER -d postgres -c "CREATE DATABASE ${_DB_NAME}" 2>/dev/null || true
+
+  - name: node:24-alpine
+    id: 'Run database migrations'
+    dir: 'api'
+    entrypoint: sh
+    secretEnv: ['DB_USER', 'DB_PASSWORD']
+    args:
+      - -c
+      - |
+        apk add --no-cache wget
+        wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O /usr/local/bin/cloud_sql_proxy
+        chmod +x /usr/local/bin/cloud_sql_proxy
+        /usr/local/bin/cloud_sql_proxy -instances=${_INSTANCE_CONNECTION}=tcp:5432 &
+        sleep 5
+        export DATABASE_URL="postgresql://$$DB_USER:$$DB_PASSWORD@localhost:5432/${_DB_NAME}"
+        npm install
+        npx prisma migrate deploy
+
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    id: 'Create Artifact Registry repository'
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        gcloud artifacts repositories describe ${_AR_REPO} \
+          --location=${_REGION} || \
+        gcloud artifacts repositories create ${_AR_REPO} \
+          --repository-format=docker \
+          --location=${_REGION} \
+          --description="Docker repository for blog services"
+
+  - name: gcr.io/cloud-builders/docker
+    id: 'Build API image'
+    dir: 'api'
+    args:
+      - build
+      - -t
+      - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/${_API_SERVICE}:${SHORT_SHA}
+      - .
+
+  - name: gcr.io/cloud-builders/docker
+    id: 'Push API image'
+    args:
+      - push
+      - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/${_API_SERVICE}:${SHORT_SHA}
+
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    id: 'Deploy API to Cloud Run'
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - ${_API_SERVICE}
+      - --image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/${_API_SERVICE}:${SHORT_SHA}
+      - --region=${_REGION}
+      - --platform=managed
+      - --allow-unauthenticated
+      - --set-env-vars=DB_NAME=${_DB_NAME},INSTANCE_CONNECTION_NAME=${_INSTANCE_CONNECTION},AUTHOR_CLIENT_URL=${_AUTHOR_CLIENT_URL},READER_CLIENT_URL=${_READER_CLIENT_URL}
+      - --set-secrets=DB_USER=TOP-SQL-USER:latest,DB_PASSWORD=TOP-SQL-PW:latest,JWT_SECRET=BLOG-JWT-SECRET:latest
+      - --add-cloudsql-instances=${_INSTANCE_CONNECTION}
+
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    id: 'Fetch API URL'
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        gcloud run services describe ${_API_SERVICE} \
+          --region=${_REGION} \
+          --format='value(status.url)' > /workspace/api_url.txt
+        cat /workspace/api_url.txt
+
+  - name: gcr.io/cloud-builders/docker
+    id: 'Build author-frontend image'
+    dir: 'author-frontend'
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        docker build \
+          --build-arg VITE_API_URL=$(cat /workspace/api_url.txt) \
+          -t ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/${_AUTHOR_SERVICE}:${SHORT_SHA} \
+          .
+
+  - name: gcr.io/cloud-builders/docker
+    id: 'Push author-frontend image'
+    args:
+      - push
+      - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/${_AUTHOR_SERVICE}:${SHORT_SHA}
+
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    id: 'Deploy author-frontend to Cloud Run'
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - ${_AUTHOR_SERVICE}
+      - --image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/${_AUTHOR_SERVICE}:${SHORT_SHA}
+      - --region=${_REGION}
+      - --platform=managed
+      - --allow-unauthenticated
+
+  - name: gcr.io/cloud-builders/docker
+    id: 'Build reader-frontend image'
+    dir: 'reader-frontend'
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        docker build \
+          --build-arg VITE_API_URL=$(cat /workspace/api_url.txt) \
+          -t ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/${_READER_SERVICE}:${SHORT_SHA} \
+          .
+
+  - name: gcr.io/cloud-builders/docker
+    id: 'Push reader-frontend image'
+    args:
+      - push
+      - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/${_READER_SERVICE}:${SHORT_SHA}
+
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    id: 'Deploy reader-frontend to Cloud Run'
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - ${_READER_SERVICE}
+      - --image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/${_READER_SERVICE}:${SHORT_SHA}
+      - --region=${_REGION}
+      - --platform=managed
+      - --allow-unauthenticated
+
+images:
+  - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/${_API_SERVICE}:${SHORT_SHA}
+  - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/${_AUTHOR_SERVICE}:${SHORT_SHA}
+  - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/${_READER_SERVICE}:${SHORT_SHA}
