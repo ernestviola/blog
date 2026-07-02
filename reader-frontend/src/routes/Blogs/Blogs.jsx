@@ -46,7 +46,6 @@ const Home = () => {
         const data = await response.json();
         setBlogs(data.blogs);
         setTotalPages(data.totalPages);
-        console.log(data.blogs);
       } catch (error) {
         // network error try again
         setBlogs([]);
